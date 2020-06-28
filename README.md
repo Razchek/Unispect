@@ -1,3 +1,7 @@
+Not currently ready for github. Getting there, please be patient. :)
+
+------
+
 # Unispect
 
 ![Screenshot0](https://github.com/Razchek/Unispect/blob/master/Screenshots/poweredByCoffee.png?raw=true)
@@ -6,7 +10,8 @@ Unispect is a mono type definition and field inspector targetting Unity games co
 It does so by accessing the remote process's memory.
 
 The design choice of accessing the process memory to gather the definitions was made with the intention 
-of being able to access run-time type definitions as well as accurate field definition information.
+of being able to access the run-time type definitions as well as accurate field definition information.
+
 
 ![Screenshot1](https://github.com/Razchek/Unispect/blob/master/Screenshots/screenshot1.png?raw=true)
 
@@ -71,4 +76,3 @@ License
 Currently all copyrights are reserved. This is subject to change.
 
    [MahApps.Metro]: <https://github.com/MahApps/MahApps.Metro>
- 
