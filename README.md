@@ -24,8 +24,8 @@ of being able to access the run-time type definitions as well as accurate field 
   - Plugin interface for custom memory access implementations
   - Track types in more detail in the inspector by simply clicking on the base or extended type
  
- *¹_Static values are still being implemented_
- *²_These are hashed and will match between users, but they will not match de4dot's naming_
+ *¹ _Static values are still being implemented_
+ *² _These are hashed and will match between users, but they will not match de4dot's naming_
 
 ![Screenshot2](https://github.com/Razchek/Unispect/blob/master/Screenshots/screenshot2.png?raw=true)
 
