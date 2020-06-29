@@ -19,9 +19,11 @@ of being able to access the run-time type definitions as well as accurate field 
 
   - Display type definitions from classes, structures, interfaces and enums
   - Display field definitions including offsets, types and static values
+  - Automatic deobfuscation of obfuscated names * 
   - Plugin interface for custom memory access implementations
   - Track types in more detail in the inspector by simply clicking on the base or extended type
  
+ *_These are hashed and will match between users, but they will not match de4dot's naming_
 
 ![Screenshot2](https://github.com/Razchek/Unispect/blob/master/Screenshots/screenshot2.png?raw=true)
 
@@ -33,7 +35,7 @@ Planned features:
  
 ### Tech
 
-Unispect uses these open source projects:
+Unispect uses these projects:
 
 * [MahApps.Metro] - A toolkit for creating modern WPF applications. Lots of goodness out-of-the box.
 * [DynamicStructs] (Currently Private) - A dynamic struct generator written by me. :)
