@@ -68,9 +68,15 @@ I currently have no plans on porting it to other frameworks or platforms.
 ```
 
 ### Plugins
+You can create your own plugin by using [MemoryPluginTemplate.cs](https://github.com/Razchek/Unispect/blob/master/Unispect/Plugins/MemoryPluginTemplate.cs) as a reference.
+The Unispect assembly will need to be referenced in your library by simply including a reference to Unispect.exe in your project.
+Ensure that your builds are targetting the x64 architect and simply drop the compiled dll into the Unispect/Plugins folder.
+You will be able to access the plugin in Unispect by clicking "Load Plugin" then clicking on your library's class name.
 
-Information to come.
+![Screenshot1](https://github.com/Razchek/Unispect/blob/master/Screenshots/screenshot3.png?raw=true)
 
+Every time Unispect is restarted the memory access type will be reverted to default.
+So for now you will need to ensure you reselect your plugin every time you restart the application.
 
 ### Support
 Contribute? Nice! Fork and request a pull.
