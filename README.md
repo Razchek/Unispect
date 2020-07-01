@@ -78,6 +78,7 @@ Contribute? Nice! Fork and request a pull.
 
 License
 ----
-Currently all copyrights are reserved. This is subject to change.
+All code, NuGets and binaries are under the [MIT License (MIT)]
 
    [MahApps.Metro]: <https://github.com/MahApps/MahApps.Metro>
+   [MIT License (MIT)]: <https://github.com/Razchek/Unispect/blob/master/LICENSE>
