@@ -68,15 +68,18 @@ I currently have no plans on porting it to other frameworks or platforms.
 ```
 
 ### Plugins
-You can create your own plugin by using [MemoryPluginTemplate.cs](https://github.com/Razchek/Unispect/blob/master/Unispect/Plugins/MemoryPluginTemplate.cs) as a reference.
-The Unispect assembly will need to be referenced in your library by simply including a reference to Unispect.exe in your project.
-Ensure that your builds are targetting the x64 architect and simply drop the compiled dll into the Unispect/Plugins folder.
-You will be able to access the plugin in Unispect by clicking "Load Plugin" then clicking on your library's class name.
 
+  - Start a new Class Library (.NET Framework) project and replace your starting code with the code from [MemoryPluginTemplate.cs]
+  - Add a reference to Unispect.exe (Project > Add Reference... > Browse)
+  - Change your Build Platform target to x64
+  - Edit the code to your hearts content
+  - Compile the class library and place the .dll into Unispect's plugins folder (Unispect\Plugins\)
+  - Open Unispect and click "Load Plugin". Look for your class name and then select it by clicking on it.
+  
 ![Screenshot1](https://github.com/Razchek/Unispect/blob/master/Screenshots/screenshot3.png?raw=true)
 
-Every time Unispect is restarted the memory access type will be reverted to default.
-So for now you will need to ensure you reselect your plugin every time you restart the application.
+***Note: Every time Unispect is restarted the memory access type will be reverted to default.
+So for now you will need to ensure you reselect your plugin every time you restart the application.***
 
 ### Support
 Contribute? Nice! Fork and request a pull.
@@ -88,3 +91,4 @@ All code, NuGets and binaries are under the [MIT License (MIT)]
 
    [MahApps.Metro]: <https://github.com/MahApps/MahApps.Metro>
    [MIT License (MIT)]: <https://github.com/Razchek/Unispect/blob/master/LICENSE>
+   [MemoryPluginTemplate.cs]: <https://github.com/Razchek/Unispect/blob/master/Unispect/Plugins/MemoryPluginTemplate.cs>
