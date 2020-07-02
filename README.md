@@ -26,7 +26,7 @@ of being able to access the run-time type definitions as well as accurate field 
  
  *¹ _Static values are still being implemented_
  
- *² _These are hashed and will match between users, but they will not match de4dot's naming_
+ *² _These will match between users, but they will not match de4dot's naming_
 
 ![Screenshot2](https://github.com/Razchek/Unispect/blob/master/Gallery/screenshot2.png?raw=true)
 
