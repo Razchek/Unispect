@@ -9,6 +9,9 @@ namespace MyMemoryNameSpace
         public MyMemoryPlugin()
         {
             //  Perform any preliminary initialization you need here.
+
+            // Display messages in Unispect's log.
+            Log.Add("Looking good, captain.");
         }
 
         public override ModuleProxy GetModule(string moduleName)
