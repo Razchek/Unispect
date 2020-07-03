@@ -1,0 +1,199 @@
+﻿<mah:MetroWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:unispect="clr-namespace:Unispect"
+        x:Class="Unispect.MainWindow"
+        mc:Ignorable="d"
+        Title="Unispect - Mono Type Dumper" Height="350" Width="800" ResizeMode="CanMinimize" 
+        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+    <mah:MetroWindow.Resources>
+        <Style x:Key="TransparentStyle" TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Transparent">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="HyperlinkStyle" TargetType="{x:Type Hyperlink}" BasedOn="{StaticResource {x:Type Hyperlink}}"> 
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <!--<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />-->
+                    <Setter Property="Foreground" Value="Red" />
+                    <Setter Property="TextBlock.TextDecorations" Value="Underline" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <unispect:BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+    </mah:MetroWindow.Resources>
+    <mah:MetroWindow.LeftWindowCommands>
+        <mah:WindowCommands>
+            <Button Click="BtnSystemMenuClick" ToolTip="Open the system window menu">
+                <iconPacks:PackIconModern Width="22"
+                                          Height="22"
+                                          Kind="TournamentBracketLeft" />
+            </Button>
+            <Button Click="BtnOpenGithub_OnClick" ToolTip="Visit Unispect on Github">
+                <iconPacks:PackIconModern Width="22"
+                                          Height="22"
+                                          Kind="SocialGithubOctocat" />
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.LeftWindowCommands>
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands> 
+            <Button Click="BtnLoadPluginClick" Content="Load Plugin" ToolTip="Loads a plugin from the plugin list to use as the memory interface">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconModern Width="22"
+                                                      Height="22"
+                                                      VerticalAlignment="Center"
+                                                      Kind="Return" />
+                            <TextBlock Margin="4 0 0 0"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <Button Click="BtnCreateAsm_Click" Content="Create Assembly" ToolTip="Generate a library from the current project and save it to disk">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconModern Width="22"
+                                                      Height="22"
+                                                      VerticalAlignment="Center"
+                                                      Kind="PageArrow" />
+                            <TextBlock Margin="4 0 0 0"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
+
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout x:Name="TypeInspectorFlyout" Header="Type Inspector" Position="Right" Width="600" IsOpen="{Binding Path=IsFlyoutOpen, Mode=TwoWay}">
+                <!-- Right flyout (treeview) -->
+                <TreeView x:Name="TvMainView"
+                          VirtualizingStackPanel.IsVirtualizing="True"
+                          VirtualizingStackPanel.VirtualizationMode="Recycling">
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type unispect:TypeDefWrapper}" ItemsSource="{Binding Path=Fields}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=FullName}" />
+                                <TextBlock Text=" ["/>
+                                <TextBlock Text="{Binding Path=ClassType}" />
+                                <TextBlock Text="] : "/>
+                                <TextBlock>
+                                    <Hyperlink Click="TreeViewParentClicked" Style="{StaticResource HyperlinkStyle}" >
+                                        <TextBlock Text="{Binding Path=ParentName}" />
+                                    </Hyperlink>
+                                </TextBlock>
+                                <TextBlock Text="{Binding Path=InterfacesText}" />
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type unispect:FieldDefWrapper}">
+                            <StackPanel Orientation="Horizontal" MouseRightButtonUp="UIElement_OnMouseRightButtonUp">
+                                <TextBlock Text="{Binding Path=OffsetHex}" />
+                                <TextBlock Text=" " />
+                                <TextBlock Text="{Binding Path=Name}" />
+                                <TextBlock Text=" : " />
+                                <TextBlock>
+                                    <Hyperlink Click="TreeViewFieldTypeClicked" Style="{StaticResource HyperlinkStyle}" >
+                                        <TextBlock Text="{Binding Path=FieldType}" />
+                                    </Hyperlink>
+                                </TextBlock>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+            </mah:Flyout>
+            <mah:Flyout Header="Unispect" IsOpen="{Binding ElementName=TypeInspectorFlyout, Path=IsOpen}" Position="Left" Width="200" CloseButtonVisibility="Hidden" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
+                <!-- Left flyout (searchbox etc) -->
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock>Search</TextBlock>
+                    <Grid Margin="0,0,0,5" Background="White" HorizontalAlignment="Left" VerticalAlignment="Top"  > 
+                        <TextBlock Margin="0,4" Width="150" Text="Enter text here ..." 
+                                   Foreground="LightSteelBlue" Visibility="{Binding ElementName=TxSearchBox, Path=Text.IsEmpty, 
+                            Converter={StaticResource BoolToVisConverter}}" FontStyle="Italic" TextAlignment="Center" />
+                         
+                        <TextBox TextChanged="TxSearchBox_OnTextChanged" Margin="0,0" Width="150" Name="TxSearchBox" Background="Transparent" Foreground="Black" CaretBrush="Black" />
+ 
+                        <Button  Width="20" Height="20" Foreground="White" Margin="125,0,0,0" HorizontalAlignment="Left"
+                                 Style="{StaticResource TransparentStyle}" Click="BtnClearTextClick" 
+                                 Visibility="{Binding ElementName=TxSearchBox, Path=Text.IsEmpty, 
+                            Converter={StaticResource BoolToVisConverter}, ConverterParameter=true}">
+
+                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" Cursor="Hand">X</TextBlock>
+                        </Button>
+                    </Grid>
+                    <CheckBox Content="Include Fields" IsChecked="{Binding Path=SsIncludeFields, Mode=TwoWay}" Checked="SearchToggleChanged" Unchecked="SearchToggleChanged" />
+                    <CheckBox Content="Include FieldTypes" IsChecked="{Binding Path=SsIncludeFieldTypes, Mode=TwoWay}" Checked="SearchToggleChanged" Unchecked="SearchToggleChanged" />
+                    <CheckBox Content="Include Parent" IsChecked="{Binding Path=SsIncludeParent, Mode=TwoWay}" Checked="SearchToggleChanged" Unchecked="SearchToggleChanged" />
+                    <CheckBox Content="Include Extends" IsChecked="{Binding Path=SsIncludeExtends, Mode=TwoWay}" Checked="SearchToggleChanged" Unchecked="SearchToggleChanged" />
+                </StackPanel>
+            </mah:Flyout>
+            <mah:Flyout Header="Type Details" x:Name="TypePropertiesFlyout"  IsOpen="False" 
+                         Position="Bottom" Width="500" Height="220" CloseButtonVisibility="Visible" Background="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" 
+                         VerticalAlignment="Bottom"
+                         Margin="0,0,0,0" AnimateOpacity="True" AnimateOnPositionChange="True" AreAnimationsEnabled="True">
+                <StackPanel HorizontalAlignment="Left"> 
+                    <TextBlock x:Name="TbTypeName"/>  
+                    <TextBlock x:Name="TbOffset"/>
+
+                    <TextBlock Margin="0,10,0,2">Fields</TextBlock>
+                    <ListBox x:Name="LbFields" Width="280" Height="150" />
+                </StackPanel>
+            </mah:Flyout>
+            <mah:Flyout Header="Offset Chains" x:Name="OffsetChainFlyout"  IsOpen="False" 
+                        Position="Right" Width="500" Height="220" CloseButtonVisibility="Visible" Background="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" 
+                        VerticalAlignment="Bottom"
+                        Margin="0,0,0,0" AnimateOpacity="True" AnimateOnPositionChange="True" AreAnimationsEnabled="True">
+                <StackPanel HorizontalAlignment="Left">
+                    <ListBox x:Name="LbFieldChains" Width="280" Height="150" />
+                </StackPanel>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
+    <Grid>
+        <Button x:Name="BtnDumpOffsets" Content="Go" HorizontalAlignment="Left" VerticalAlignment="Top" Width="102" Margin="682,17,0,0" Click="BtnDumpOffsets_Click" Height="53" FontSize="20"/>
+        <TextBox x:Name="TxLog" HorizontalAlignment="Left" Height="196" Margin="10,113,0,0"  VerticalAlignment="Top" Width="774" 
+                 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible" IsReadOnly="True" />
+        <ProgressBar  Visibility="Hidden" x:Name="PbMain" HorizontalAlignment="Left" Height="22" Margin="10,86,0,0" VerticalAlignment="Top" Width="667" Maximum="1" SmallChange="0.001" LargeChange="0.1"/>
+        <Label Content="Output file" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="107"/>
+        <CheckBox x:Name="CkDumpToFile" Checked="CkDumpToFile_OnChecked" Unchecked="CkDumpToFile_OnChecked" Content="Save to file" HorizontalAlignment="Left" Margin="687,83,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <Button Visibility="Hidden" x:Name="BtnShowInspector" HorizontalAlignment="Left" Margin="561,14,0,0" VerticalAlignment="Top" Width="116" Click="BtnShowInspector_OnClick" 
+                Content="Show Inspector"
+                ToolTip="Show the inspector view"/>
+
+        <TextBox x:Name="TxOutputFile" HorizontalAlignment="Left" Height="23" Margin="117,10,0,0" VerticalAlignment="Top" Width="324"
+                 Text="dump.txt"  
+                 ToolTip="Output file name. If no directory is specified then the file will be placed in the applications starting location"/>
+        <Label Content="Process Handle" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="107"/>
+        <TextBox x:Name="TxProcessHandle" HorizontalAlignment="Left" Height="23" Margin="117,41,0,0" VerticalAlignment="Top" Width="157"
+            Text="GameHandle"  
+            ToolTip="If you are using the BasicMemory module then simply type the process name here (without the '.exe')"/>
+        <Button HorizontalAlignment="Left" Margin="446,10,0,0" VerticalAlignment="Top" Width="33" Height="26" Click="BtnBrowseClick"
+                Content="..." 
+                ToolTip="Open the file browser dialog" />
+        <Button Visibility="Hidden" x:Name="BtnSaveToFile" HorizontalAlignment="Left" Margin="561,48,0,0" VerticalAlignment="Top" Width="116" Click="BtnDumpToFile_OnClick" 
+            Content="Save to file"
+            ToolTip="Dump the definitions to disk"/>
+        <TextBox x:Name="TxInspectorTarget" HorizontalAlignment="Left" Height="23" Margin="327,41,0,0" VerticalAlignment="Top" Width="152"
+            Text="Assembly-CSharp"  
+            ToolTip="This is the inspection's target assembly name. &#x0a;Leave it as Assembly-CSharp if you're unsure. "/>
+        <Label Content="Target" HorizontalAlignment="Left" Margin="279,41,0,0" VerticalAlignment="Top" />
+    </Grid>
+</mah:MetroWindow>

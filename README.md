@@ -5,7 +5,7 @@ Not currently ready for github. Getting there, please be patient. :)
 # Unispect
 ![unispect](https://github.com/Razchek/Unispect/blob/master/Gallery/UnispectLogo.png?raw=true)
  
-Unispect is a mono type definition and field inspector targetting Unity games compiled with mono.
+Unispect is a mono type definition and field inspector targeting Unity games compiled with mono.
 It does so by accessing the remote process's memory.
 
 ![Screenshot0](https://github.com/Razchek/Unispect/blob/master/Gallery/poweredByCoffee.png?raw=true)
