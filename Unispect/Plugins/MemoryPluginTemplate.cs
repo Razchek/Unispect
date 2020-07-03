@@ -24,7 +24,7 @@ namespace MyMemoryNameSpace
             return new ModuleProxy(moduleName, baseAddress, size);
         }
 
-        public override void AttachToProcess(string handle)
+        public override bool AttachToProcess(string handle)
         {
             // Attach to the process so that the two Read functions are able to interface with the process.
             // The argument: handle (string) will be the text from Unispect's "Process Handle" text box.
@@ -41,14 +41,7 @@ namespace MyMemoryNameSpace
             // -so you could remove the IntPtr constructor.
             // Marshal.Copy(bytePtr, buffer, 0, size) 
             throw new NotImplementedException();
-        }
-
-        public override T Read<T>(ulong address, int length = 0)
-        {
-            // See the BasicMemory.cs implementation for a crude example.
-            // This handles reading structures, ulong and uint.
-            throw new NotImplementedException();
-        }
+        } 
 
         public override void Dispose()
         {
