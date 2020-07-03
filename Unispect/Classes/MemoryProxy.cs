@@ -14,7 +14,7 @@ namespace Unispect
          
         public abstract ModuleProxy GetModule(string moduleName);
 
-        public abstract bool AttachToProcess(object handle);
+        public abstract bool AttachToProcess(string handle);
 
         public abstract byte[] Read(ulong address, int length);
 

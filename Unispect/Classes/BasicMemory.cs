@@ -53,7 +53,7 @@ namespace Unispect
                 resultModule.ModuleMemorySize);
         }
 
-        public override bool AttachToProcess(object handle)
+        public override bool AttachToProcess(string handle)
         {
             var procName = (string)handle;
             var procList = Process.GetProcessesByName(procName);
