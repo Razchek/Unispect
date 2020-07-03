@@ -1,7 +1,3 @@
-Not currently ready for github. Getting there, please be patient. :)
-
-------
-
 # Unispect
 ![unispect](https://github.com/Razchek/Unispect/blob/master/Gallery/UnispectLogo.png?raw=true)
  
