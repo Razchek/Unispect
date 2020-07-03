@@ -90,9 +90,6 @@ I currently have no plans on porting it to other frameworks or platforms.
   
 ![Screenshot1](https://github.com/Razchek/Unispect/blob/master/Gallery/screenshot3.png?raw=true)
 
-***Note: Every time Unispect is restarted the memory access type will be reverted to default.
-So for now you will need to ensure you reselect your plugin every time you restart the application.***
-
 
 ### Build
    - **Visual Studio 2019:** *Build > Build Solution (F6)*
