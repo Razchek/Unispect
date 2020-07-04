@@ -39,7 +39,7 @@ namespace Unispect
 
         public void DumpTypes(string fileName, Type memoryProxyType,
             bool verbose = true,
-            string processHandle = "EscapeFromTarkov",
+            string processHandle = "SomeGame",
             string monoModuleName = "mono-2.0-bdwgc.dll",
             string moduleToDump = "Assembly-CSharp")
         {
