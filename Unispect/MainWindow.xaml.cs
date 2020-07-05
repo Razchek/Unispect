@@ -167,6 +167,7 @@ namespace Unispect
             var fileName = _dumpToFile ? TxOutputFile.Text : "";
             var processHandle = TxProcessHandle.Text;
             var moduleToDump = TxInspectorTarget.Text;
+            var monoModuleDll = TxMonoModuleDll.Text;
 
             bool exceptionOccurred = false;
             await Task.Run(() =>
@@ -181,7 +182,8 @@ namespace Unispect
                         fileName,
                         _memoryProxyType,
                         processHandle: processHandle,
-                        moduleToDump: moduleToDump);
+                        moduleToDump: moduleToDump,
+                        monoModuleName: monoModuleDll);
                 }
                 catch (Exception ex)
                 {
