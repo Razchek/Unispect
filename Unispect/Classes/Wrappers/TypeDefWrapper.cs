@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MahApps.Metro.Converters;
 
 namespace Unispect
 {
@@ -37,11 +36,11 @@ namespace Unispect
             InnerDefinition = typeDef;
 
             FullName = InnerDefinition.GetFullName();
- 
+
             Name = InnerDefinition.Name;
             Namespace = InnerDefinition.Namespace;
             ClassType = InnerDefinition.GetClassType();
-             
+
             var parent = InnerDefinition.GetParent();
             if (parent.HasValue)
             {
@@ -55,9 +54,9 @@ namespace Unispect
             var fields = InnerDefinition.GetFields();
             if (fields != null)
                 Fields.AddRange(fields.Select(field => (FieldDefWrapper)field)
-                    .Where(w => w.Name != "<ErrorReadingField>")); 
+                    .Where(w => w.Name != "<ErrorReadingField>"));
             // bug Skipping invalid fields until I solve the issue
-            
+
             var interfaces = InnerDefinition.GetInterfaces();
             if (interfaces != null)
             {
@@ -88,7 +87,7 @@ namespace Unispect
         public List<TypeDefWrapper> Interfaces { get; } = new List<TypeDefWrapper>();
 
         public string InterfacesText { get; }
-          
+
         public static implicit operator TypeDefWrapper(TypeDefinition typeDef)
         {
             return new TypeDefWrapper(typeDef);

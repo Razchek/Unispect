@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using MahApps.Metro.Controls.Dialogs;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +11,6 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using MahApps.Metro.Controls.Dialogs;
 using MenuItem = System.Windows.Controls.MenuItem;
 
 
@@ -554,7 +554,7 @@ namespace Unispect
                     chains.Add($"{sr.FieldParent.FullName}.{sr.Field.Name} -> [{sr.FieldOffset:X4}] {r.Field.Name} -> [{r.FieldOffset:X4}] " +
                                $"{context.Parent.FullName} -> [{context.Offset:X4}] {context.Name}");
                 }
-            } 
+            }
         }
 
         public List<OffsetChainInfo> GetReferences(TypeDefWrapper targetDef)

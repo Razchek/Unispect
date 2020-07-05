@@ -49,7 +49,7 @@ namespace Unispect
             AppendLine(text, MessageType.Error);
         }
 
-        public static void Exception(string text, Exception ex )
+        public static void Exception(string text, Exception ex)
         {
             var msg = !string.IsNullOrEmpty(text)
                 ? $"{text}{Environment.NewLine}{ex.Message}"

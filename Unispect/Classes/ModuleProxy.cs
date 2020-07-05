@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace Unispect
+﻿namespace Unispect
 {
     public class ModuleProxy
     {
-        public string Name { get;   }
+        public string Name { get; }
         public ulong BaseAddress { get; }
-        public int Size { get; }
+        public int Size { get; } 
 
         public ModuleProxy(string name, ulong baseAddress, int size)
         {

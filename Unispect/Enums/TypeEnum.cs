@@ -14,19 +14,19 @@
         Char = 0x03,
         Byte = 0x04,
         SByte = 0x05,
-         
+
         Int16 = 0x06,
         UInt16 = 0x07,
 
         Int32 = 0x08,
         UInt32 = 0x09,
-         
+
         Int64 = 0x0A,
         UInt64 = 0x0B,
-         
+
         Single = 0x0C,
         Double = 0x0d,
-         
+
         String = 0x0e,
 
         Ptr = 0x0f,         /* arg: <type> token */
@@ -37,7 +37,7 @@
         Array = 0x14,       /* type, rank, boundsCount, bound1, loCount, lo1 */
         GenericInst = 0x15, /* <type> <type-arg-count> <type-1> \x{2026} <type-n> */
         TypedByRef = 0x16,
-        
+
         IntPtr = 0x18,
         UIntPtr = 0x19,
 

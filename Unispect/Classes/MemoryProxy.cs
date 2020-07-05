@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Unispect
 {
-    public abstract class MemoryProxy : IDisposable 
+    public abstract class MemoryProxy : IDisposable
     {
         public static MemoryProxy Instance { get; set; }
 
@@ -11,7 +11,7 @@ namespace Unispect
         {
             Instance = this;
         }
-         
+
         public abstract ModuleProxy GetModule(string moduleName);
 
         public abstract bool AttachToProcess(string handle);

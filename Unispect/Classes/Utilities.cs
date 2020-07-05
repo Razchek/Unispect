@@ -154,14 +154,14 @@ namespace Unispect
             return await mw.ShowMessageAsync(title, msg, messageDialogStyle, metroDialogSettings);
         }
 
-        public static void FadeFromTo(this UIElement uiElement, double fromOpacity, double toOpacity, 
+        public static void FadeFromTo(this UIElement uiElement, double fromOpacity, double toOpacity,
             int durationInMilliseconds, bool showOnStart, bool collapseOnFinish)
-        { 
+        {
             var timeSpan = TimeSpan.FromMilliseconds(durationInMilliseconds);
             var doubleAnimation =
                 new DoubleAnimation(fromOpacity, toOpacity,
                     new Duration(timeSpan));
-             
+
             uiElement.BeginAnimation(UIElement.OpacityProperty, doubleAnimation);
             if (showOnStart)
             {

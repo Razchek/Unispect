@@ -34,6 +34,7 @@ Planned features (these aren't definite, but likely):
  
 ### Current Limitations & Thoughts
   - Currently only tested on Unity 2018 and Unity 2019 builds. When I push the Assembly Export feature, I will also convert the static structures used to read all of the remote information into dynamic structures and allow the offsets to be customized with a JSON file. This will allow Unispect to target a broader spectrum of Unity versions.
+  - Currently only games using mono bleeding edge (mono-2.0-bdwgc) are supported. Standard mono is in the scope of this project and will be looked at in the near future.
   - Only works with Unity Scripting Backend: Mono. IL2CPP may be supported in the future.
   - Only works with x64 systems and software. I might (unlikely) add support for x32 in the future.
   - Static, constant and enum values are not shown. Still figuring those out.

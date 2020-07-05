@@ -18,10 +18,14 @@ namespace MyMemoryNameSpace
         {
             // This method is only used to get the base address and size in memory of 'moduleName' (mono-2.0-bdwgc.dll by default)
             // The inspector target is obtained by using that module.
+            
             throw new NotImplementedException();
             var baseAddress = 0ul;
             var size = 0x00767000;
             return new ModuleProxy(moduleName, baseAddress, size);
+
+            // If the module is not found then return null so we can attempt to locate alternatives
+            //return null;
         }
 
         public override bool AttachToProcess(string handle)

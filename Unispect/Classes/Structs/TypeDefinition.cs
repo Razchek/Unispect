@@ -5,8 +5,6 @@ using System.Text;
 
 namespace Unispect
 {
-
-
     [StructLayout(LayoutKind.Explicit)]
     public struct TypeDefinition // _MonoClassDef
     {
@@ -21,7 +19,7 @@ namespace Unispect
 
         [FieldOffset(0x1B)] public uint BitFields0; // see link above for more info
         [FieldOffset(0x1F)] public byte MinAlign0;
-        [FieldOffset(0x20)] public byte BitByte; 
+        [FieldOffset(0x20)] public byte BitByte;
 
         [FieldOffset(0x20)] public uint BitFields1; // Type storage bitfield
         [FieldOffset(0x24)] public uint BitFields2;
@@ -82,7 +80,7 @@ namespace Unispect
         {
             get
             {
-                var hash = NamePtr + NestedIn * (uint) ClassType;
+                var hash = NamePtr + NestedIn * (uint)ClassType;
                 if (CacheStore.ClassNameCache.ContainsKey(hash))
                     return CacheStore.ClassNameCache[hash];
 
@@ -105,10 +103,10 @@ namespace Unispect
             }
         }
 
-         
-        public bool IsEnum => ((BitByte  >> 3) & 1) == 0x1; // todo get enum values
-         
+
+
         public bool IsValueType => ((BitByte >> 2) & 1) == 0x1;
+        public bool IsEnum => ((BitByte >> 3) & 1) == 0x1; // todo get enum values
         public bool IsInterface => ((BitByte >> 4) & 1) == 0x1;
 
         public UnknownPrefix ClassType
@@ -141,11 +139,11 @@ namespace Unispect
         public TypeDefinition? GetParent()
         {
             if (Parent == 0) return null;
-            return Memory.Read<TypeDefinition>(Parent); 
+            return Memory.Read<TypeDefinition>(Parent);
         }
 
         public List<TypeDefinition> GetSuperTypes()
-        { 
+        {
             //var parent = Memory.Read<TypeDefinition>(Parent);
             var superTypes = new List<TypeDefinition>();
             for (uint i = 0; i < IDepth; i++)
@@ -214,7 +212,7 @@ namespace Unispect
                 else if (IsInterface)
                     prefix = UnknownPrefix.GInterface;
 
-                var unkTypeStr = b.ToUnknownClassString(prefix,TypeToken);
+                var unkTypeStr = b.ToUnknownClassString(prefix, TypeToken);
                 return unkTypeStr;
             }
 
@@ -239,7 +237,7 @@ namespace Unispect
         }
 
         public override string ToString()
-        { 
+        {
             return GetFullName();
         }
 

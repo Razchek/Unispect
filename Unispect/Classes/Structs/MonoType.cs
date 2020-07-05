@@ -1,5 +1,5 @@
 ﻿namespace Unispect
-{ 
+{
     public struct MonoType // MonoType
     {
         public ulong Data;

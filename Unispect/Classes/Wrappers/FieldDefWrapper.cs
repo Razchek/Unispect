@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.InteropServices;
-using MahApps.Metro.Controls;
 
 namespace Unispect
 {
@@ -15,7 +13,7 @@ namespace Unispect
             InnerDefinition = fieldDef;
 
             Name = InnerDefinition.Name;
-             
+
             FieldType = InnerDefinition.GetFieldTypeString();
 
             //FieldTypeDefinition = InnerDefinition.GetFieldType();
@@ -51,7 +49,7 @@ namespace Unispect
             var type = System.Type.GetType(FieldType);
 
             var t = MemoryProxy.Instance.Read<MonoType>(InnerDefinition.Type);
-            var isStatic = t.Attributes & 0x10; 
+            var isStatic = t.Attributes & 0x10;
 
             if (type != null)
             {

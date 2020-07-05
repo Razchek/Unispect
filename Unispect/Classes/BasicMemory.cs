@@ -15,7 +15,7 @@ namespace Unispect
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool ReadProcessMemory(IntPtr hProcess, ulong lpAddress, byte[] buffer, int size, ref int lpNumberOfBytesRead);
- 
+
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool CloseHandle(IntPtr hHandle);
         #endregion
@@ -31,7 +31,7 @@ namespace Unispect
 
         public Process ManagedProcessHandle;
         public IntPtr NativeProcessHandle;
-          
+
         public override ModuleProxy GetModule(string moduleName)
         {
             if (ManagedProcessHandle == null) throw new Exception("Not currently attached to a process.");
@@ -49,7 +49,7 @@ namespace Unispect
             if (resultModule == null)
                 return null;
 
-            return new ModuleProxy(resultModule.ModuleName, (ulong) resultModule.BaseAddress.ToInt64(),
+            return new ModuleProxy(resultModule.ModuleName, (ulong)resultModule.BaseAddress.ToInt64(),
                 resultModule.ModuleMemorySize);
         }
 
@@ -71,7 +71,7 @@ namespace Unispect
         {
             return ReadMemory(address, length);
         }
-           
+
         public byte[] ReadMemory(ulong address, int length)
         {
             var bytesRead = 0;
@@ -89,7 +89,7 @@ namespace Unispect
         public override void Dispose()
         {
             // Cleanup
-            CloseHandle(NativeProcessHandle); 
+            CloseHandle(NativeProcessHandle);
         }
     }
 }

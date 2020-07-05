@@ -10,7 +10,7 @@ namespace Unispect
         public ulong NamePtr;
         public ulong Parent;
         public int Offset;
-        private int pad0;
+        private int pad0; // align(8)
 
         public string Name
         {
@@ -52,7 +52,7 @@ namespace Unispect
             }
 
             var str = b.ToAsciiString();
-            return str; 
+            return str;
         }
 
         public override string ToString()
@@ -69,11 +69,11 @@ namespace Unispect
             {
                 case TypeEnum.Class:
                 case TypeEnum.SzArray:
-                case TypeEnum.GenericInst:  
+                case TypeEnum.GenericInst:
                 case TypeEnum.ValueType:
                     var typeDef = Memory.Read<TypeDefinition>(Memory.Read<ulong>(monoType.Data));
                     var name = typeDef.GetFullName();
-                     
+
                     if (typeCode == TypeEnum.GenericInst)
                     {
                         // If the field type is a generic instance, grab the generic parameters
@@ -85,7 +85,7 @@ namespace Unispect
                             if (int.TryParse(paramCountStr, out var pCount))
                             {
                                 var genericParams = "";
-                                 
+
                                 var monoGenericClass = Memory.Read<MonoGenericClass>(monoType.Data);
                                 var monoGenericInst =
                                     Memory.Read<MonoGenericInstance>(monoGenericClass.Context.ClassInstance);
@@ -97,23 +97,23 @@ namespace Unispect
 
                                     // todo maybe make this method recursive to reduce both nesting and code clones
                                     // that will also allow for generic nests to be defined e.g. Root<Nested<int, Nested2<int, int>>, long>
-                                     
-                                        switch (subTypeCode)
-                                        {
-                                            case TypeEnum.Class:
-                                            case TypeEnum.SzArray:
-                                            case TypeEnum.GenericInst:
-                                            case TypeEnum.ValueType:
-                                                var subTypeDef =
-                                                    Memory.Read<TypeDefinition>(Memory.Read<ulong>(subType.Data));
-                                                var subName = subTypeDef.Name;
-                                                genericParams += $"{subName}, ";
-                                                break;
-                                            default:
-                                                genericParams += $"{Enum.GetName(typeof(TypeEnum), subTypeCode)}, ";
-                                                break;
-                                        }
-                                     
+
+                                    switch (subTypeCode)
+                                    {
+                                        case TypeEnum.Class:
+                                        case TypeEnum.SzArray:
+                                        case TypeEnum.GenericInst:
+                                        case TypeEnum.ValueType:
+                                            var subTypeDef =
+                                                Memory.Read<TypeDefinition>(Memory.Read<ulong>(subType.Data));
+                                            var subName = subTypeDef.Name;
+                                            genericParams += $"{subName}, ";
+                                            break;
+                                        default:
+                                            genericParams += $"{Enum.GetName(typeof(TypeEnum), subTypeCode)}, ";
+                                            break;
+                                    }
+
                                 }
 
                                 genericParams = genericParams.TrimEnd(',', ' ');
@@ -147,13 +147,13 @@ namespace Unispect
                 case TypeEnum.GenericInst: // todo check generic types
                 case TypeEnum.ValueType:
                     var typeDef = Memory.Read<TypeDefinition>(Memory.Read<ulong>(monoType.Data));
-                      
+
                     return typeDef;
             }
 
             return null;
         }
-         
+
         public static MemoryProxy Memory => MemoryProxy.Instance;
     }
 }

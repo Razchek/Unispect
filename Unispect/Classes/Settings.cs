@@ -12,7 +12,7 @@ namespace Unispect
         {
             _internalSettings = new Dictionary<string, string>();
         }
-        private Dictionary<string, string> _internalSettings ;//= new Dictionary<string, string>();
+        private Dictionary<string, string> _internalSettings;//= new Dictionary<string, string>();
 
         public void AddOrUpdate(string key, string value)
         {

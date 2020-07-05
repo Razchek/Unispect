@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 
 namespace Unispect
-{ 
+{
     public struct MonoGenericClass
     {
         public ulong ContainerClass; // MonoClass 0x0
