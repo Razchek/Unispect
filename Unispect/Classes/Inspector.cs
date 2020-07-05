@@ -100,7 +100,8 @@ namespace Unispect
 
         private ModuleProxy GetMonoModule(out string moduleName)
         {
-            Log.Add("Looking for the mono module (mono, mono-2.0-bdwgc)");
+            //Log.Add("Looking for the mono module (mono, mono-2.0-bdwgc)");
+            Log.Add("Looking for the mono module (mono-2.0-bdwgc)");
             var module = _memory.GetModule("mono-2.0-bdwgc.dll");
             if (module != null)
             {
