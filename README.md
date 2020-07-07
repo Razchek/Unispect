@@ -96,7 +96,9 @@ I currently have no plans on porting it to other frameworks or platforms.
 
 ### Support
 Contribute? Nice! Fork and request a pull.
- 
+
+Before requesting a pull, be sure to test the target changes.
+If the testing fails, feel free to create an [issue](https://github.com/Razchek/Unispect/issues) instead.
 
 License
 ----
