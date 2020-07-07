@@ -47,7 +47,7 @@ namespace Unispect
                     ? fieldType.Substring(dotIndex)
                     : fieldType;
                 //return $"{GetFieldType().ToLower().Replace(".", "_")}_0x{Offset:X2}";
-                return $"{subType.LowerChar(0).Replace("[]", "Array")}" +
+                return $"{subType.LowerChar().FormatFieldText()}" +
                        $"_0x{Offset:X2}";
             }
 

@@ -69,15 +69,32 @@ namespace Unispect
 
             return Encoding.ASCII.GetString(buffer, start, length);
         }
-
-        public static string LowerChar(this string str, int index)
+        
+        public static string LowerChar(this string str, int index = 0)
         {
-            if (index < str.Length)
+            if (index < str.Length && index > -1) // instead of casting from uint, just check if it's zero or greater
             {
-                return char.ToLower(str[index]) + str.Substring(index + 1);
+                if(index == 0)
+                    return char.ToLower(str[index]) + str.Substring(index + 1);
+
+                return str.Substring(0, index - 1) + char.ToLower(str[index]) + str.Substring(index + 1);
             }
 
             return str;
+        }
+
+        public static string FormatFieldText(this string text)
+        {
+            var ret = text.Replace("[]", "Array");
+            var lessThanIndex = ret.IndexOf('<');
+            if (lessThanIndex >-1)
+            {
+                // The type name _should_ always end at the following index, so we don't need to splice.
+                //var greaterThanIndex = ret.IndexOf('>'); 
+                ret = ret.Substring(0, lessThanIndex);
+            }
+
+            return ret;
         }
 
         public static int ToInt32(this byte[] buffer, int start = 0) => BitConverter.ToInt32(buffer, start);
