@@ -2,10 +2,10 @@
 {
     public enum UnknownPrefix
     {
-        GClass = 99,
-        GStruct = 97,
-        GEnum = 95,
-        GAttribute = 94,
-        GInterface = 93,
+        GClass = 1,
+        GStruct = 2,
+        GEnum = 3,
+        GAttribute = 4,
+        GInterface = 5,
     }
 }

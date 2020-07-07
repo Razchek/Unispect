@@ -34,15 +34,15 @@ namespace Unispect
             }
         }
 
-        public static string ToUnknownClassString(this byte[] buffer, UnknownPrefix prefix = UnknownPrefix.GClass,
-            uint token = 0, int start = 0)
+        public static string ToUnknownClassString(this byte[] _, UnknownPrefix prefix, uint token)
         {
-            var hash = token * (uint)prefix;
+            var hash = (token- 0x2000000) * (uint)prefix;
             if (UnknownClassNameCache.ContainsKey(hash))
                 return UnknownClassNameCache[hash];
 
             var prefixName = Enum.GetName(typeof(UnknownPrefix), prefix);
-            var str = $"{prefixName}{PrefixIndexer[prefixName ?? throw new InvalidOperationException()]++:0000}";
+            //var str = $"{prefixName}{PrefixIndexer[prefixName ?? throw new InvalidOperationException()]++:0000}";
+            var str = $"{prefixName}{hash:X4}";
             UnknownClassNameCache.Add(hash, str);
 
             return str;
@@ -69,12 +69,12 @@ namespace Unispect
 
             return Encoding.ASCII.GetString(buffer, start, length);
         }
-        
+
         public static string LowerChar(this string str, int index = 0)
         {
             if (index < str.Length && index > -1) // instead of casting from uint, just check if it's zero or greater
             {
-                if(index == 0)
+                if (index == 0)
                     return char.ToLower(str[index]) + str.Substring(index + 1);
 
                 return str.Substring(0, index - 1) + char.ToLower(str[index]) + str.Substring(index + 1);
@@ -87,7 +87,7 @@ namespace Unispect
         {
             var ret = text.Replace("[]", "Array");
             var lessThanIndex = ret.IndexOf('<');
-            if (lessThanIndex >-1)
+            if (lessThanIndex > -1)
             {
                 // The type name _should_ always end at the following index, so we don't need to splice.
                 //var greaterThanIndex = ret.IndexOf('>'); 

@@ -80,12 +80,12 @@ namespace Unispect
         {
             get
             {
-                var hash = NamePtr + NestedIn * (uint)ClassType;
-                if (CacheStore.ClassNameCache.ContainsKey(hash))
-                    return CacheStore.ClassNameCache[hash];
+                var cacheHash = NamePtr + NestedIn * (uint)ClassType;
+                if (CacheStore.ClassNameCache.ContainsKey(cacheHash))
+                    return CacheStore.ClassNameCache[cacheHash];
 
                 var name = GetName();
-                CacheStore.ClassNameCache.AddOrUpdate(hash, name, (arg1, s) => s);
+                CacheStore.ClassNameCache.AddOrUpdate(cacheHash, name, (arg1, s) => s);
                 return name;
             }
         }
@@ -214,6 +214,8 @@ namespace Unispect
 
                 var unkTypeStr = b.ToUnknownClassString(prefix, TypeToken);
                 return unkTypeStr;
+                // Todo: add support for more generic obfuscated names
+                //Valid Names Match = @"^[a-zA-Z_<{$][a-zA-Z_0-9<>{}$.`-]*$"
             }
 
             var str = b.ToAsciiString();
