@@ -52,11 +52,32 @@ namespace Unispect
                 });
             };
 
+            //TvMainView.SelectedItemChanged += (o, args) => { /* Todo: maybe set up the context to be used by other functions for the selected item here */ };
+
             // Assign our default memory accessor (it may be overridden in the next line)
             _memoryProxyType = typeof(BasicMemory);
 
             LoadSettings();
         }
+
+        private void TreeViewItem_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
+        {
+            if (_mSuppressRequestBringIntoView)
+                return;
+
+            e.Handled = true;
+
+            _mSuppressRequestBringIntoView = true;
+
+            if (sender is TreeViewItem tvi)
+            {
+                var newTargetRect = new Rect(-1000, 0, tvi.ActualWidth + 1000, tvi.ActualHeight);
+                tvi.BringIntoView(newTargetRect);
+            }
+
+            _mSuppressRequestBringIntoView = false;
+        }
+        private bool _mSuppressRequestBringIntoView;
 
         private Settings _settings;
         private static readonly string SettingsPath = Directory.GetCurrentDirectory() + "\\unispect.settings";
