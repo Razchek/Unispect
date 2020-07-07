@@ -22,7 +22,7 @@ of being able to access the run-time type definitions as well as accurate field 
  
  *¹ _Static values are still being implemented_
  
- *² _The deobfuscated names will likely not match between users. I still need to implement a hashing system._
+ *² _The deobfuscated names should match between users. I need collaborative results to validate this._
 
 ![Screenshot2](https://github.com/Razchek/Unispect/blob/master/Gallery/screenshot2.png?raw=true)
 
