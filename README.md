@@ -43,6 +43,8 @@ Planned features (these aren't definite, but likely):
   
     *(I will probably change the code to iterate over all modules and collect all information in the future)*
   - Unispect's 'Deobfuscation' only targets the most common obfuscation seen on Unity's managed assemblies.  
+
+Check out the [issues tab](https://github.com/Razchek/Unispect/issues) for more.
  
 ### Tech
 
