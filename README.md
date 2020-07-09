@@ -16,7 +16,8 @@ of being able to access the run-time type definitions as well as accurate field 
   - Display type definitions from classes, structures, interfaces and enums
   - Display field definitions including offsets, types and static values *¹
   - Automatic deobfuscation of obfuscated names *²
-  - Save processed information to a formatted document for manual digestion
+  - Save definitions to a formatted document for manual digestion
+  - Save definitions into a shareable database which can then be loaded back into Unispect anytime
   - Plugin interface for custom memory access implementations
   - Track types in more detail in the inspector by simply clicking on the base or extended type
  
