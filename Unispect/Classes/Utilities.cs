@@ -3,9 +3,12 @@ using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -93,6 +96,15 @@ namespace Unispect
                 //var greaterThanIndex = ret.IndexOf('>'); 
                 ret = ret.Substring(0, lessThanIndex);
             }
+
+            return ret;
+        }
+
+        public static string SanitizeFileName(this string fileName)
+        {
+            var invalidChars = Path.GetInvalidFileNameChars();
+            var pattern = invalidChars.Aggregate("[", (current, c) => current + $"\\{c}") + "]"; 
+            var ret = Regex.Replace(fileName, pattern, "_");
 
             return ret;
         }

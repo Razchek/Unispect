@@ -1,5 +1,8 @@
-﻿namespace Unispect
+﻿using System;
+
+namespace Unispect
 {
+    [Serializable]
     public struct MonoType // MonoType
     {
         public ulong Data;

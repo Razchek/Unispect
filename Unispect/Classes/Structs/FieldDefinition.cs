@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Unispect
 {
+    [Serializable]
     [StructLayout(LayoutKind.Sequential, Size = 32)]
     public struct FieldDefinition
     {

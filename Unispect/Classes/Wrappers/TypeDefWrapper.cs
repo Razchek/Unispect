@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Unispect
 {
+    [Serializable]
     public class TypeDefWrapper
     {
         public TypeDefinition InnerDefinition;
@@ -31,7 +32,7 @@ namespace Unispect
             return name;
         }
 
-        public TypeDefWrapper(TypeDefinition typeDef, bool isExtended = false)
+        public TypeDefWrapper(TypeDefinition typeDef, bool isExtended = false/*, bool getSubField = true*/)
         {
             InnerDefinition = typeDef;
 
@@ -52,7 +53,17 @@ namespace Unispect
                 return;
 
             var fields = InnerDefinition.GetFields();
-            if (fields != null)
+            // Todo: if 'FieldTypeDefinition' gets used elsewhere, consider re-implementing the following:
+            //if (fields != null)
+            //{
+            //    foreach (var field in fields)
+            //    {
+            //        var fdw = new FieldDefWrapper(field, getSubField);
+            //        if (fdw.Name == "<ErrorReadingField>") continue;
+            //        Fields.Add(fdw);
+            //    }
+            //}
+            if(fields != null)
                 Fields.AddRange(fields.Select(field => (FieldDefWrapper)field)
                     .Where(w => w.Name != "<ErrorReadingField>"));
             // bug Skipping invalid fields until I solve the issue

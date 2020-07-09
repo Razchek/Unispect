@@ -20,9 +20,12 @@ namespace Unispect
     {
         private readonly System.Timers.Timer _typingSearchTimer = new System.Timers.Timer(500);
         private List<TypeDefWrapper> TypeDefinitions => _inspector?.TypeDefinitions;
+        private List<TypeDefWrapper> TypeDefinitionsDb { get; set; }
+
 
         private void Inspector_ProgressChanged(object sender, float e)
         {
+            PbMain.IsIndeterminate = false;
             PbMain.Value = e;
         }
 
@@ -152,7 +155,73 @@ namespace Unispect
         private Inspector _inspector;
         private Type _memoryProxyType;
 
-        private async void BtnDumpOffsets_Click(object sender, RoutedEventArgs e)
+        private void BtnDumpOffsets_OnClick(object sender, RoutedEventArgs e)
+        {
+            StartTypeDump();
+        }
+
+        private void BtnMoreClick(object sender, RoutedEventArgs e)
+        {
+            var cm = new ContextMenu();
+
+            var mi = new MenuItem { Header = "Load Type DB" };
+            mi.Click += LoadTypeDbClick;
+
+            cm.Items.Add(mi);
+            cm.IsOpen = true;
+        }
+
+        private async void LoadTypeDbClick(object sender, RoutedEventArgs e)
+        {
+            ToggleProcessingButtons(false);
+
+            var ofd = new OpenFileDialog
+            {
+                Filter = "GZip compressed file|*.gz|All files|*.*"
+            };
+            var dialogResult = ofd.ShowDialog(this);
+
+            if (dialogResult == true)
+            {
+                try
+                {
+                    Log.Add("Loading type definition database");
+
+                    PbMain.IsIndeterminate = true;
+                    if (!PbMain.IsVisible) PbMain.FadeIn();
+
+                    await Task.Run(() =>
+                    {
+                        Thread.Sleep(100);
+                        TypeDefinitionsDb = Serializer.LoadCompressed<List<TypeDefWrapper>>(ofd.FileName);
+                    });
+
+                    PbMain.IsIndeterminate = false;
+                    PbMain.Value = 1;
+                    TvMainView.DataContext = this;
+                    TvMainView.ItemsSource = TypeDefinitionsDb;
+
+                    if (!BtnShowInspector.IsVisible)
+                    {
+                        BtnShowInspector.FadeIn(200);
+                        BtnSaveToFile.FadeIn(200);
+                    }
+
+                    Log.Add("Done");
+                }
+                catch (Exception ex)
+                {
+                    Log.Exception(
+                        "Could not load the type definition database, " +
+                        "perhaps it's from a different version of Unispect.",
+                        ex);
+                }
+            }
+
+            ToggleProcessingButtons(true);
+        }
+
+        private async void StartTypeDump()
         {
             if (_memoryProxyType == typeof(BasicMemory))
             {
@@ -179,9 +248,38 @@ namespace Unispect
                 }
             }
 
-            BtnDumpOffsets.IsEnabled = false;
+            ToggleProcessingButtons(false);
+
             _inspector = new Inspector();
             _inspector.ProgressChanged += Inspector_ProgressChanged;
+
+            var progressWatcher = new System.Timers.Timer(200);
+            var lastProgressValue = 0d;
+            progressWatcher.Start();
+            progressWatcher.Elapsed += (sender, args) =>
+            {
+                try
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        // Precision comparison should be fine here, but we'll do this just in case
+                        const double epsilon = double.Epsilon;
+                        if (Math.Abs(PbMain.Value - lastProgressValue) < epsilon &&
+                            Math.Abs(PbMain.Value - 1) > epsilon &&
+                            Math.Abs(PbMain.Value) > epsilon)
+                        {
+                            PbMain.IsIndeterminate = true;
+                            return;
+                        }
+
+                        lastProgressValue = PbMain.Value;
+                    });
+                }
+                catch
+                {
+                    // 
+                }
+            };
 
             PbMain.FadeIn(200);
 
@@ -189,6 +287,7 @@ namespace Unispect
             var processHandle = TxProcessHandle.Text;
             var moduleToDump = TxInspectorTarget.Text;
 
+            TypeDefinitionsDb = null;
             bool exceptionOccurred = false;
             await Task.Run(() =>
             {
@@ -211,16 +310,24 @@ namespace Unispect
                 }
             });
 
-            BtnDumpOffsets.IsEnabled = true;
-            if (exceptionOccurred)
-                return;
+            ToggleProcessingButtons(true);
 
-            TvMainView.DataContext = _inspector;
-            TvMainView.ItemsSource = _inspector.TypeDefinitions;
+            if (exceptionOccurred)
+            {
+                PbMain.Value = 0;
+                PbMain.FadeOut();
+                return;
+            }
+
+            TvMainView.DataContext = this;
+            TvMainView.ItemsSource = TypeDefinitions;
 
             //PbMain.FadeOut(1000);
-            BtnShowInspector.FadeIn(200);
-            BtnSaveToFile.FadeIn(200);
+            if (!BtnShowInspector.IsVisible)
+            {
+                BtnShowInspector.FadeIn(200);
+                BtnSaveToFile.FadeIn(200);
+            }
         }
 
         private void BtnOpenGithub_OnClick(object sender, RoutedEventArgs e)
@@ -242,7 +349,6 @@ namespace Unispect
         {
             TypeInspectorFlyout.IsOpen = true;
         }
-
 
         private bool _isFlyoutOpen;
 
@@ -291,9 +397,40 @@ namespace Unispect
 
         private async void BtnDumpToFile_OnClick(object sender, RoutedEventArgs e)
         {
+            ToggleProcessingButtons(false);
+
             var fileName = TxOutputFile.Text;
+            var procHandle = TxProcessHandle.Text;
+            var modToDump = TxInspectorTarget.Text;
             Log.Add($"Dumping definitions and offsets to file \"{fileName}\"");
-            await Task.Run(() => { _inspector.DumpToFile(fileName); });
+
+            await Task.Run(() =>
+            {
+                // If tdlToDump is null then the method will try to dump from the inspector type definition list
+                // TypeDefinitionsDb will be null if: a) nothing has been loaded, or b) StartTypeDump has executed successfully
+                if (_inspector == null) _inspector = new Inspector();
+                _inspector.DumpToFile(fileName, tdlToDump: TypeDefinitionsDb);
+
+                PbMain.Dispatcher.Invoke(() => { PbMain.IsIndeterminate = true; });
+
+                // Only save the database if it's a fresh dump
+                if (TypeDefinitionsDb == null)
+                {
+                    _inspector.SaveTypeDefDb(procHandle, modToDump);
+                    Log.Add("Done");
+                }
+            });
+
+            PbMain.IsIndeterminate = false;
+            ToggleProcessingButtons(true);
+
+        }
+
+        private void ToggleProcessingButtons(bool enabled)
+        {
+            BtnDumpOffsets.IsEnabled = enabled;
+            BtnMore.IsEnabled = enabled;
+            BtnSaveToFile.IsEnabled = enabled;
         }
 
         #region TypeInfo
@@ -332,6 +469,10 @@ namespace Unispect
             {
                 var context =
                     (FieldDefWrapper)((System.Windows.Documents.Hyperlink)routedEventArgs.Source).DataContext;
+
+                // This requires remote memory access
+                // Using Field.FieldTypeDefinition requires significantly extra time and local memory during propogation
+                // Currently the only usage would be here, so it is not used for now.
                 var fTypeDef = (TypeDefWrapper)context.InnerDefinition.GetFieldType();
                 if (fTypeDef == null)
                 {
@@ -359,7 +500,7 @@ namespace Unispect
             }
             catch (Exception ex)
             {
-                TbTypeName.Text = "Unable to retrieve.";
+                TbTypeName.Text = $"Unable to retrieve.{Environment.NewLine}This feature requires remote memory access.";
                 Log.Exception(null, ex);
             }
 
@@ -456,7 +597,6 @@ namespace Unispect
 
         private async void BtnLoadPluginClick(object sender, RoutedEventArgs e)
         {
-
             var cm = new ContextMenu { IsOpen = true };
 
             cm.Items.Add(new MenuItem { Header = "Loading ...", IsEnabled = false });

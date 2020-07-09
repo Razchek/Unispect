@@ -3,12 +3,12 @@ using System.Linq;
 
 namespace Unispect
 {
-
+    [Serializable]
     public class FieldDefWrapper
     {
         public FieldDefinition InnerDefinition;
 
-        public FieldDefWrapper(FieldDefinition fieldDef)
+        public FieldDefWrapper(FieldDefinition fieldDef/*, bool getFieldTypeDef = true*/)
         {
             InnerDefinition = fieldDef;
 
@@ -16,7 +16,14 @@ namespace Unispect
 
             FieldType = InnerDefinition.GetFieldTypeString();
 
-            //FieldTypeDefinition = InnerDefinition.GetFieldType();
+            // Todo: if 'FieldTypeDefinition' gets used elsewhere, consider re-implementing the following:
+            //if (getFieldTypeDef)
+            //{
+            //    var fdType = InnerDefinition.GetFieldType();
+            //    if (fdType.HasValue)
+            //        FieldTypeDefinition = new TypeDefWrapper(fdType.Value, getSubField: false);
+            //}
+
             Offset = InnerDefinition.Offset;
         }
 
