@@ -547,7 +547,9 @@ namespace Unispect
 
             await Task.Run(() =>
             {
-                var results = TypeDefinitions.FindAll(MatchCondition);
+                var results = TypeDefinitionsDb == null
+                    ? TypeDefinitions.FindAll(MatchCondition)
+                    : TypeDefinitionsDb.FindAll(MatchCondition);
 
                 _tempView.Clear();
                 _tempView.AddRange(results);
