@@ -589,7 +589,7 @@ namespace Unispect
             _searchFor = TxSearchBox.Text;
 
             if (string.IsNullOrWhiteSpace(TxSearchBox.Text))
-                TvMainView.ItemsSource = _inspector.TypeDefinitions;
+                TvMainView.ItemsSource = TypeDefinitionsDb ?? _inspector.TypeDefinitions;
             else
                 _typingSearchTimer.Start();
         }
