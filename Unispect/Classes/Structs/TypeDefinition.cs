@@ -19,14 +19,15 @@ namespace Unispect
         [FieldOffset(0x18)] public ushort IDepth;
         [FieldOffset(0x1A)] public byte Rank; // array dimension
 
-        [FieldOffset(0x1B)] public uint BitFields0; // see link above for more info
-        [FieldOffset(0x1F)] public byte MinAlign0;
-        [FieldOffset(0x20)] public byte BitByte;
+        //[FieldOffset(0x1B)] public byte undefined;
+        [FieldOffset(0x1C)] public int InstanceSize;
 
-        [FieldOffset(0x20)] public uint BitFields1; // Type storage bitfield
-        [FieldOffset(0x24)] public uint BitFields2;
-        [FieldOffset(0x28)] public uint BitFields3;
-        [FieldOffset(0x2C)] public uint BitFields4;
+        [FieldOffset(0x24)] public byte MinAlign0;
+        [FieldOffset(0x20)] public byte BitByte;    // I won't implement a bitfield here, but I'll use the first byte for bit operations anyway
+        [FieldOffset(0x20)] public uint BitFields0; // Type storage bitfield
+        [FieldOffset(0x24)] public uint BitFields1;
+        [FieldOffset(0x28)] public uint BitFields2;
+        [FieldOffset(0x2C)] public uint BitFields3;
 
         [FieldOffset(0x30)] public ulong Parent; // monoClass*
         [FieldOffset(0x38)] public ulong NestedIn; // monoClass*
@@ -109,7 +110,7 @@ namespace Unispect
 
         public bool IsValueType => ((BitByte >> 2) & 1) == 0x1;
         public bool IsEnum => ((BitByte >> 3) & 1) == 0x1; // todo get enum values
-        public bool IsInterface => ((BitByte >> 4) & 1) == 0x1;
+        public bool IsInterface => ((BitByte >> 4) & 1) == 0x1; // blittable
 
         public UnknownPrefix ClassType
         {
@@ -216,7 +217,7 @@ namespace Unispect
 
                 var unkTypeStr = b.ToUnknownClassString(prefix, TypeToken);
                 return unkTypeStr;
-                // Todo: add support for more generic obfuscated names
+                // Todo: add support for more general obfuscated names
                 //Valid Names Match = @"^[a-zA-Z_<{$][a-zA-Z_0-9<>{}$.`-]*$"
             }
 
