@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -463,6 +464,9 @@ namespace Unispect
 
         private void TreeViewFieldTypeClicked(object sender, RoutedEventArgs routedEventArgs)
         {
+            if (MemoryProxy.Instance == null)
+                return;
+
             TypePropertiesFlyout.IsOpen = true;
             if (LbFields.ItemsSource == null) LbFields.Items.Clear();
             try
@@ -500,7 +504,7 @@ namespace Unispect
             }
             catch (Exception ex)
             {
-                TbTypeName.Text = $"Unable to retrieve.{Environment.NewLine}This feature requires remote memory access.";
+                TbTypeName.Text = $"Unable to retrieve.{Environment.NewLine}{ex.Message}";
                 Log.Exception(null, ex);
             }
 

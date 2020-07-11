@@ -39,7 +39,7 @@ namespace Unispect
 
         public static string ToUnknownClassString(this byte[] _, UnknownPrefix prefix, uint token)
         {
-            var hash = (token- 0x2000000) * (uint)prefix;
+            var hash = (token - 0x2000000) * (uint)prefix;
             if (UnknownClassNameCache.ContainsKey(hash))
                 return UnknownClassNameCache[hash];
 
@@ -103,7 +103,7 @@ namespace Unispect
         public static string SanitizeFileName(this string fileName)
         {
             var invalidChars = Path.GetInvalidFileNameChars();
-            var pattern = invalidChars.Aggregate("[", (current, c) => current + $"\\{c}") + "]"; 
+            var pattern = invalidChars.Aggregate("[", (current, c) => current + $"\\{c}") + "]";
             var ret = Regex.Replace(fileName, pattern, "_");
 
             return ret;

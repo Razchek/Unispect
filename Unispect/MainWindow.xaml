@@ -159,7 +159,23 @@
                     <TextBlock x:Name="TbOffset"/>
 
                     <TextBlock Margin="0,10,0,2">Fields</TextBlock>
-                    <ListBox x:Name="LbFields" Width="280" Height="150" />
+                    <ListBox x:Name="LbFields" Width="280" Height="150">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type unispect:FieldDefWrapper}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Path=OffsetHex}" />
+                                    <TextBlock Text=" " />
+                                    <TextBlock Text="{Binding Path=Name}" />
+                                    <TextBlock Text=" : " />
+                                    <TextBlock>
+                                    <Hyperlink Click="TreeViewFieldTypeClicked" Style="{StaticResource HyperlinkStyle}" >
+                                        <TextBlock Text="{Binding Path=FieldType}" />
+                                    </Hyperlink>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </StackPanel>
             </mah:Flyout>
             <mah:Flyout Header="Offset Chains" x:Name="OffsetChainFlyout"  IsOpen="False" 
