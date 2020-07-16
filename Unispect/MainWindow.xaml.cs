@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -464,25 +463,39 @@ namespace Unispect
 
         private void TreeViewFieldTypeClicked(object sender, RoutedEventArgs routedEventArgs)
         {
-            if (MemoryProxy.Instance == null)
-                return;
-
-            TypePropertiesFlyout.IsOpen = true;
-            if (LbFields.ItemsSource == null) LbFields.Items.Clear();
             try
             {
-                var context =
-                    (FieldDefWrapper)((System.Windows.Documents.Hyperlink)routedEventArgs.Source).DataContext;
+                TypeDefWrapper fTypeDef = null;
+                var context = (FieldDefWrapper)((System.Windows.Documents.Hyperlink)routedEventArgs.Source).DataContext;
+                if (MemoryProxy.Instance == null)
+                {
+                    var curTypeDefList = TypeDefinitionsDb ?? TypeDefinitions;
+                    fTypeDef = curTypeDefList.Find(tdw => tdw.FullName == context.FieldType.Replace("[]", ""));
 
-                // This requires remote memory access
-                // Using Field.FieldTypeDefinition requires significantly extra time and local memory during propogation
-                // Currently the only usage would be here, so it is not used for now.
-                var fTypeDef = (TypeDefWrapper)context.InnerDefinition.GetFieldType();
+                    //if (result == null)
+                    //{
+                    //    return; // todo show error
+                    //}
+
+                    //fTypeDef = result;
+                }
+
+                else
+                {
+                    if (LbFields.ItemsSource == null) LbFields.Items.Clear();
+
+                    // This requires remote memory access
+                    // Using Field.FieldTypeDefinition requires significantly extra time and local memory during propogation
+                    // Currently the only usage would be here, so it is not used for now.
+                    fTypeDef = context.InnerDefinition.GetFieldType();
+                }
+
+                TypePropertiesFlyout.IsOpen = true;
                 if (fTypeDef == null)
                 {
                     TbTypeName.Text = context.FieldType;
                     LbFields.ItemsSource = null;
-
+                    TbOffset.Text = "";
                     var t = Type.GetType(context.FieldType);
                     if (t == null)
                     {
