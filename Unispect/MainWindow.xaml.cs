@@ -471,15 +471,7 @@ namespace Unispect
                 {
                     var curTypeDefList = TypeDefinitionsDb ?? TypeDefinitions;
                     fTypeDef = curTypeDefList.Find(tdw => tdw.FullName == context.FieldType.Replace("[]", ""));
-
-                    //if (result == null)
-                    //{
-                    //    return; // todo show error
-                    //}
-
-                    //fTypeDef = result;
                 }
-
                 else
                 {
                     if (LbFields.ItemsSource == null) LbFields.Items.Clear();
@@ -495,16 +487,12 @@ namespace Unispect
                 {
                     TbTypeName.Text = context.FieldType;
                     LbFields.ItemsSource = null;
-                    TbOffset.Text = "";
+                    TbOffset.Text = $"Offset: 0x{context.Offset:X4}";
                     var t = Type.GetType(context.FieldType);
                     if (t == null)
-                    {
                         t = Type.GetType("System." + context.FieldType);
-                    }
                     if (t != null)
-                    {
                         LbFields.Items.Add($"Basic type length: {System.Runtime.InteropServices.Marshal.SizeOf(t)}");
-                    }
                 }
                 else
                 {
