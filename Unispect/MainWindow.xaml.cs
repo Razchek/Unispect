@@ -465,7 +465,7 @@ namespace Unispect
         {
             try
             {
-                TypeDefWrapper fTypeDef = null;
+                TypeDefWrapper fTypeDef;
                 var context = (FieldDefWrapper)((System.Windows.Documents.Hyperlink)routedEventArgs.Source).DataContext;
                 if (MemoryProxy.Instance == null)
                 {
