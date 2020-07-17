@@ -20,7 +20,7 @@ of being able to access the run-time type definitions as well as accurate field 
   - Save definitions into a shareable database which can then be loaded back into Unispect anytime
   - Plugin interface for custom memory access implementations
   - Track types in more detail in the inspector by simply clicking on the base or extended type
-  - Fast definition collection. Only a few seconds even when using the native memory memory implementation.
+  - Fast definition collection. Only a few seconds even when using the native memory implementation.
   
  *¹ _Static values are still being implemented_
  
