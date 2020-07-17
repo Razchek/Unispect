@@ -105,15 +105,17 @@ namespace Unispect
         public void SaveTypeDefDb(string processHandle, string moduleToDump)
         {
             Log.Add("Saving Type Definition database");
-            Log.Add("Compressing Type Definition database");
+            //Log.Add("Compressing Type Definition database");
 
             if (!System.IO.Directory.Exists("TypeDbs"))
                 System.IO.Directory.CreateDirectory("TypeDbs");
 
             // Todo if we plan on storing multiple, perhaps make it a cyclic storage system.
             //var fileName = $"{processHandle} {moduleToDump} ({DateTime.Now.ToFileTime():X8}).gz";
-            var fileName = $"{processHandle} {moduleToDump}.gz";
-            Serializer.SaveCompressed($"TypeDbs\\{fileName.SanitizeFileName().ToLower()}", TypeDefinitions);
+            //var fileName = $"{processHandle} {moduleToDump}.gz";
+            var fileName = $"{processHandle} {moduleToDump}.utd";
+            //Serializer.SaveCompressed($"TypeDbs\\{fileName.SanitizeFileName().ToLower()}", TypeDefinitions);
+            Serializer.Save($"TypeDbs\\{fileName.SanitizeFileName().ToLower()}", TypeDefinitions);
         }
 
         private ModuleProxy GetMonoModule(out string moduleName)
