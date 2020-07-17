@@ -1,5 +1,3 @@
-*Development may be a tad slow while I play Ghost of Tsushima. :)*
-
 # Unispect
 ![unispect](https://github.com/Razchek/Unispect/blob/master/Gallery/UnispectLogo.png?raw=true)
  
