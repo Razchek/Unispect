@@ -177,8 +177,7 @@ namespace Unispect
 
             var ofd = new OpenFileDialog
             {
-                //Filter = "GZip compressed file|*.gz|All files|*.*"
-                Filter = "Unispect Type Definition Database|*.utd|All files|*.*"
+                Filter = "Unispect TypeDef DB|*.utd;*.gz|All files|*.*"
             };
             var dialogResult = ofd.ShowDialog(this);
 
@@ -194,8 +193,9 @@ namespace Unispect
                     await Task.Run(() =>
                     {
                         Thread.Sleep(100);
-                        //TypeDefinitionsDb = Serializer.LoadCompressed<List<TypeDefWrapper>>(ofd.FileName);
-                        TypeDefinitionsDb = Serializer.Load<List<TypeDefWrapper>>(ofd.FileName);
+                        TypeDefinitionsDb = ofd.FileName.ToLower().EndsWith(".gz")
+                            ? Serializer.LoadCompressed<List<TypeDefWrapper>>(ofd.FileName)
+                            : Serializer.Load<List<TypeDefWrapper>>(ofd.FileName);
                     });
 
                     PbMain.IsIndeterminate = false;
