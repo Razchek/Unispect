@@ -2,6 +2,7 @@
 
 namespace Unispect
 {
+    // For more detail see: https://github.com/Unity-Technologies/mono/blob/unity-2018.4-mbe/mono/metadata/class-internals.h 
     public struct MonoGenericClass
     {
         public ulong ContainerClass; // MonoClass 0x0
