@@ -64,12 +64,12 @@ I currently have no plans on porting it to other frameworks or platforms.
  ### Example file output (small snippet):
 ```css
 [Class] GPUInstancer.SpaceshipMobileController : MonoBehaviour
-    [00][S] OffsetOfInstanceIDInCPlusPlusObject : Int32
-    [00][C] objectIsNullMessage : String
+    [00][S] OffsetOfInstanceIDInCPlusPlusObject : Int32     // Static fields are marked with [S]
+    [00][C] objectIsNullMessage : String                    // Constant fields are marked with [C]
     [00][C] cloneDestroyedMessage : String
     [10] m_CachedPtr : IntPtr
     [18] spaceShipJoystick : GPUInstancer.SpaceshipMobileJoystick
-    [20] rigidbody_0x20 : UnityEngine.Rigidbody
+    [20] rigidbody_0x20 : UnityEngine.Rigidbody             // Deobfuscated fields are named like this
     [28] emissionModule_0x28 : -.ParticleSystem.EmissionModule
     [30] emissionModule_0x30 : -.ParticleSystem.EmissionModule
     [38] light_0x38 : UnityEngine.Light
