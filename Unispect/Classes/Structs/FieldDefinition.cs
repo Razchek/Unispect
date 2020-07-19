@@ -47,7 +47,7 @@ namespace Unispect
                 var subType = dotIndex >= 0
                     ? fieldType.Substring(dotIndex)
                     : fieldType;
-                //return $"{GetFieldType().ToLower().Replace(".", "_")}_0x{Offset:X2}";
+
                 return $"{subType.LowerChar().FormatFieldText()}" +
                        $"_0x{Offset:X2}";
             }
@@ -132,9 +132,6 @@ namespace Unispect
                 var subType = MemoryProxy.Instance.Read<MonoType>(monoGenericInst.MonoTypes[i]);
                 var subTypeCode = subType.GetTypeCode();
 
-                // todo maybe make this method recursive to reduce both nesting and code clones
-                // that will also allow for generic nests to be defined e.g. Root<Nested<int, Nested2<int, int>>, long>
-
                 switch (subTypeCode)
                 {
                     case TypeEnum.Class:
@@ -173,7 +170,6 @@ namespace Unispect
                 case TypeEnum.GenericInst: // todo check generic types
                 case TypeEnum.ValueType:
                     var typeDef = Memory.Read<TypeDefinition>(Memory.Read<ulong>(monoType.Data));
-
                     return typeDef;
             }
 
