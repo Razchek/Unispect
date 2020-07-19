@@ -63,21 +63,33 @@ I currently have no plans on porting it to other frameworks or platforms.
 
  ### Example file output (small snippet):
 ```css
+[Class] GPUInstancer.SpaceshipMobileController : MonoBehaviour
+    [00][S] OffsetOfInstanceIDInCPlusPlusObject : Int32
+    [00][C] objectIsNullMessage : String
+    [00][C] cloneDestroyedMessage : String
+    [10] m_CachedPtr : IntPtr
+    [18] spaceShipJoystick : GPUInstancer.SpaceshipMobileJoystick
+    [20] rigidbody_0x20 : UnityEngine.Rigidbody
+    [28] emissionModule_0x28 : -.ParticleSystem.EmissionModule
+    [30] emissionModule_0x30 : -.ParticleSystem.EmissionModule
+    [38] light_0x38 : UnityEngine.Light
+    [40] engineTorque : Single
+    [44] enginePower : Single
+    [48] single_0x48 : Single
+    [4C] single_0x4C : Single
+    [50] single_0x50 : Single
+    [54] single_0x54 : Single
+    [58] single_0x58 : Single
+    [5C] single_0x5C : Single
 [Class] GPUInstancer.SpaceshipMobileJoystick : MonoBehaviour, IPointerDownHandler, IEventSystemHandler, IPointerUpHandler, IDragHandler
-    [00] OffsetOfInstanceIDInCPlusPlusObject : Int32
-    [00] objectIsNullMessage : String
-    [00] cloneDestroyedMessage : String
+    [00][S] OffsetOfInstanceIDInCPlusPlusObject : Int32
+    [00][C] objectIsNullMessage : String
+    [00][C] cloneDestroyedMessage : String
     [10] m_CachedPtr : IntPtr
     [18] image_0x18 : UnityEngine.UI.Image
     [20] image_0x20 : UnityEngine.UI.Image
     [28] inputDirection : UnityEngine.Vector3
     [34] vector2_0x34 : UnityEngine.Vector2
-[Class] GPUInstancer.TerrainGenerator : MonoBehaviour
-    [00] HELPTEXT_detailHealthyColor : String
-    [00] OffsetOfInstanceIDInCPlusPlusObject : Int32
-    [00] objectIsNullMessage : String
-    [00] cloneDestroyedMessage : String
-    [08] HELPTEXT_detailDryColor : String
 ```
 
 ### Plugins
