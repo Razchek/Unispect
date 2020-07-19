@@ -23,7 +23,9 @@ namespace Unispect
         [FieldOffset(0x1C)] public int InstanceSize;
 
         [FieldOffset(0x24)] public byte MinAlign0;
-        [FieldOffset(0x20)] public byte BitByte;    // I won't implement a bitfield here, but I'll use the first byte for bit operations anyway
+
+        // I won't implement a bitfield here, but I'll use the first byte for bit operations anyway
+        [FieldOffset(0x20)] public byte BitByte;
         [FieldOffset(0x20)] public uint BitFields0; // Type storage bitfield
         [FieldOffset(0x24)] public uint BitFields1;
         [FieldOffset(0x28)] public uint BitFields2;
@@ -252,15 +254,8 @@ namespace Unispect
             var fieldArrayBase = Fields;
             if (fieldArrayBase == 0)
             {
-                return null;
-                if (Parent != 0) // todo double check
-                {
-                    // recursive
-                    var parent = Memory.Read<TypeDefinition>(Parent);
-                    var parentFields = parent.GetFields();
-                    if (parentFields != null && parentFields.Count > 0)
-                        fields.AddRange(parentFields);
-                }
+                if (Parent == 0) return null;
+                goto checkParents;
             }
 
             for (var fIndex = 0u; fIndex < FieldCount; fIndex++)
@@ -273,6 +268,7 @@ namespace Unispect
                 fields.Add(field);
             }
 
+        checkParents:
             if (Parent != 0)
             {
                 // recursive
