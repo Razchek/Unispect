@@ -25,11 +25,19 @@ namespace Unispect
             //}
 
             Offset = InnerDefinition.Offset;
+
+            IsValueType = InnerDefinition.IsValueType(out var valType);
+            ValueType = IsValueType ? $" [{valType}]": "";
+
         }
 
         public string Name { get; }
 
         public string FieldType { get; }
+        
+        public bool IsValueType { get; }
+        public string ValueType { get; }
+        public string ValueTypeShort => IsValueType ? $"{ValueType[2]}" : "";
 
         public TypeDefWrapper FieldTypeDefinition { get; }
 
@@ -46,7 +54,7 @@ namespace Unispect
 
         public override string ToString()
         {
-            return $"[{Offset:X2}] {Name} : {FieldType}";
+            return $"[{Offset:X2}]{ValueTypeShort} {Name} : {FieldType}";
         }
 
         public int GetValue()
@@ -54,10 +62,18 @@ namespace Unispect
             // Todo solve and implement 
             throw new NotImplementedException();
             var type = System.Type.GetType(FieldType);
+            var fieldType = MemoryProxy.Instance.Read<MonoType>(InnerDefinition.Type);
+            
+            var vTable = MemoryProxy.Instance.Read<ulong>(Parent.InnerDefinition.RuntimeInfo+8);
 
-            var t = MemoryProxy.Instance.Read<MonoType>(InnerDefinition.Type);
-            var isStatic = t.Attributes & 0x10;
+            var staticFieldsOffset = (uint)Parent.InnerDefinition.VTableSize * 8 + 0x40;
 
+            if (MemoryProxy.Instance.Read<ulong>(vTable+staticFieldsOffset) > 0)
+            {
+                return 1;
+            }
+
+            return 0 ;
             if (type != null)
             {
                 var mem = typeof(BasicMemory);

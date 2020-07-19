@@ -81,6 +81,12 @@ namespace Unispect
             foreach (var f in Fields)
             {
                 f.Parent = this;
+
+                //if (f.IsValueType)
+                //{
+                //    if (f.ValueTypeShort == "S")
+                //        f.GetValue();
+                //}
             }
         }
 

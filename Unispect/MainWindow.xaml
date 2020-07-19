@@ -112,6 +112,7 @@
                         <HierarchicalDataTemplate DataType="{x:Type unispect:FieldDefWrapper}">
                             <StackPanel Orientation="Horizontal" MouseRightButtonUp="UIElement_OnMouseRightButtonUp">
                                 <TextBlock Text="{Binding Path=OffsetHex}" />
+                                <TextBlock Text="{Binding Path=ValueType}" />
                                 <TextBlock Text=" " />
                                 <TextBlock Text="{Binding Path=Name}" />
                                 <TextBlock Text=" : " />
@@ -164,6 +165,7 @@
                             <DataTemplate DataType="{x:Type unispect:FieldDefWrapper}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Path=OffsetHex}" />
+                                    <TextBlock Text="{Binding Path=ValueType}" />
                                     <TextBlock Text=" " />
                                     <TextBlock Text="{Binding Path=Name}" />
                                     <TextBlock Text=" : " />

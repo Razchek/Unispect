@@ -61,6 +61,17 @@ namespace Unispect
             return Name;
         }
 
+        public bool IsValueType(out string valueType)
+        {
+            var monoType =Memory.Read<MonoType>(Type);
+            
+            if (monoType.IsConstant) valueType = "Constant";
+            else if (monoType.IsStatic) valueType = "Static";
+            else valueType = "Unknown";
+
+            return monoType.IsValueType;
+        }
+
         public string GetFieldTypeString()
         {
             var monoType = Memory.Read<MonoType>(Type);
