@@ -81,12 +81,21 @@ namespace Unispect
             foreach (var f in Fields)
             {
                 f.Parent = this;
+                
+                // If the type is ValueType and the field is not static, then we need to shift the offset back by 0x10.
+                // I'm not sure why, but in all my tests this has been validated.
+                if (InnerDefinition.IsValueType)
+                {
+                    if (!f.IsValueType)
+                    {
+                        f.Offset -= 0x10;
+                    }
+                }
 
-                //if (f.IsValueType)
-                //{
-                //    if (f.ValueTypeShort == "S")
-                //        f.GetValue();
-                //}
+                if (f.IsValueType)
+                {
+                    //if (f.ValueTypeShort == "S") f.GetValue();
+                }
             }
         }
 
