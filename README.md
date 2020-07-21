@@ -11,6 +11,9 @@ of being able to access the run-time type definitions as well as accurate field 
 
 ![Screenshot1](https://github.com/Razchek/Unispect/blob/master/Gallery/screenshot1.png?raw=true)
 
+### Download
+Head over to the [releases](https://github.com/Razchek/Unispect/releases) page.
+
 # Features
 
   - Display type definitions from classes, structures, interfaces and enums
