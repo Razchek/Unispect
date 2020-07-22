@@ -64,7 +64,7 @@
                     </DataTemplate>
                 </Button.ContentTemplate>
             </Button>
-            <Button Click="BtnCreateAsm_Click" Content="Create Assembly" ToolTip="Generate a library from the current project and save it to disk">
+            <!--<Button Click="BtnCreateAsm_Click" Content="Create Assembly" ToolTip="Generate a library from the current project and save it to disk">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -72,6 +72,21 @@
                                                       Height="22"
                                                       VerticalAlignment="Center"
                                                       Kind="PageArrow" />
+                            <TextBlock Margin="4 0 0 0"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>-->
+            <Button x:Name="BtnMore" Click="BtnMoreClick" ToolTip="Shows the main context menu for Unispect">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconModern Width="22"
+                                                      Height="22"
+                                                      VerticalAlignment="Center"
+                                                      Kind="ListSelect" />
                             <TextBlock Margin="4 0 0 0"
                                        VerticalAlignment="Center"
                                        Text="{Binding}" />
@@ -88,10 +103,20 @@
                 <!-- Right flyout (treeview) -->
                 <TreeView x:Name="TvMainView"
                           VirtualizingStackPanel.IsVirtualizing="True"
-                          VirtualizingStackPanel.VirtualizationMode="Recycling">
+                          VirtualizingStackPanel.VirtualizationMode="Standard">
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                             <EventSetter Event="RequestBringIntoView" Handler="TreeViewItem_RequestBringIntoView"/>
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Path=IsValueType}" Value="True" />
+                                        <Condition Binding="{Binding ElementName=CbHideValueFields, Path=IsChecked}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </MultiDataTrigger>
+                            </Style.Triggers>
                         </Style>
                     </TreeView.ItemContainerStyle>
                     <TreeView.Resources>
@@ -149,16 +174,17 @@
                     <CheckBox Content="Include FieldTypes" IsChecked="{Binding Path=SsIncludeFieldTypes, Mode=TwoWay}" Checked="SearchToggleChanged" Unchecked="SearchToggleChanged" />
                     <CheckBox Content="Include Parent" IsChecked="{Binding Path=SsIncludeParent, Mode=TwoWay}" Checked="SearchToggleChanged" Unchecked="SearchToggleChanged" />
                     <CheckBox Content="Include Extends" IsChecked="{Binding Path=SsIncludeExtends, Mode=TwoWay}" Checked="SearchToggleChanged" Unchecked="SearchToggleChanged" />
+                    <CheckBox x:Name="CbHideValueFields" Margin="0,10,0,0" Content="Hide Value Fields" />
                 </StackPanel>
             </mah:Flyout>
             <mah:Flyout Header="Type Details" x:Name="TypePropertiesFlyout"  IsOpen="False" 
                          Position="Bottom" Width="500" Height="220" CloseButtonVisibility="Visible" Background="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" 
                          VerticalAlignment="Bottom"
                          Margin="0,0,0,0" AnimateOpacity="True" AnimateOnPositionChange="True" AreAnimationsEnabled="True">
+                
                 <StackPanel HorizontalAlignment="Left">
                     <TextBlock x:Name="TbTypeName"/>
                     <TextBlock x:Name="TbOffset"/>
-
                     <TextBlock Margin="0,10,0,2">Fields</TextBlock>
                     <ListBox x:Name="LbFields" Width="280" Height="150">
                         <ListBox.ItemTemplate>
@@ -192,10 +218,9 @@
     </mah:MetroWindow.Flyouts>
     <Grid>
         <Button x:Name="BtnDumpOffsets" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Width="102" Margin="650,17,0,0" FontSize="20"
+                Width="102" Margin="682,17,0,0" FontSize="20"
                 Content="GO"
                 Click="BtnDumpOffsets_OnClick" Height="53" />
-        <Button x:Name="BtnMore" Margin="757,17,0,0" FontSize="14" Content="&#11206;" Click="BtnMoreClick" HorizontalAlignment="Left" VerticalAlignment="Top" Height="53" Width="27" />
         <TextBox x:Name="TxLog" HorizontalAlignment="Left" Height="196" Margin="10,113,0,0"  VerticalAlignment="Top" Width="774" 
                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible" IsReadOnly="True" />
         <ProgressBar Visibility="Hidden" x:Name="PbMain" HorizontalAlignment="Left" Height="22" Margin="10,86,0,0" VerticalAlignment="Top" Width="667" Maximum="1" SmallChange="0.001" LargeChange="0.1"/>

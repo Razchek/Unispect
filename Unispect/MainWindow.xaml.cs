@@ -349,6 +349,7 @@ namespace Unispect
 
         private void BtnShowInspector_OnClick(object sender, RoutedEventArgs e)
         {
+            TxSearchBox.Text = "";
             TypeInspectorFlyout.IsOpen = true;
         }
 
