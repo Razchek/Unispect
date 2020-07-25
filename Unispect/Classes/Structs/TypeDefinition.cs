@@ -20,9 +20,7 @@ namespace Unispect
         [FieldOffset(0x1A)] public byte Rank; // array dimension
 
         //[FieldOffset(0x1B)] public byte undefined;
-        [FieldOffset(0x1C)] public int InstanceSize;
-
-        [FieldOffset(0x24)] public byte MinAlign0;
+        [FieldOffset(0x1C)] public int InstanceSize; 
 
         // I won't implement a bitfield here, but I'll use the first byte for bit operations anyway
         [FieldOffset(0x20)] public byte BitByte;
