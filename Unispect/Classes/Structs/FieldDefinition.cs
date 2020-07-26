@@ -92,10 +92,13 @@ namespace Unispect
                     var typeDef = Memory.Read<TypeDefinition>(Memory.Read<ulong>(monoType.Data));
                     var name = typeDef.GetFullName();
 
+                    // Potential bug, not all genericinst are valid? Needs further investigation.
+                    // Temporary fix by using a stack overflow protection counter
                     if (typeCode == TypeEnum.GenericInst)
                     {
                         // If the field type is a generic instance, grab the generic parameters
-                        name = GetGenericParams(name, monoType);
+                        var stackProtectionCounter = 0;
+                        name = GetGenericParams(name, monoType, ref stackProtectionCounter);
                     }
 
                     if (typeCode == TypeEnum.SzArray)
@@ -110,8 +113,11 @@ namespace Unispect
             }
         }
 
-        private string GetGenericParams(string name, MonoType monoType)
+        private string GetGenericParams(string name, MonoType monoType, ref int stackProtectionCounter)
         {
+            if (stackProtectionCounter++ > 30) 
+                return "StackOverflow";
+
             var genericIndexOf = name.IndexOf('`');
             if (genericIndexOf >= 0)
             {
@@ -127,7 +133,7 @@ namespace Unispect
 
             var paramCount = monoGenericInst.BitField & 0x003fffff; // (1 << 22) - 1;
 
-            for (uint i = 0; i < paramCount; i++)
+            for (uint i = 0; i < paramCount && i < MonoGenericInstance.MaxParams; i++)
             {
                 var subType = MemoryProxy.Instance.Read<MonoType>(monoGenericInst.MonoTypes[i]);
                 var subTypeCode = subType.GetTypeCode();
@@ -141,7 +147,7 @@ namespace Unispect
                         var subTypeDef = Memory.Read<TypeDefinition>(Memory.Read<ulong>(subType.Data));
                         var subName = subTypeDef.Name;
                         if (subTypeCode == TypeEnum.GenericInst)
-                            genericParams += GetGenericParams(subName, subType); // Recursive to determine nested types
+                            genericParams += GetGenericParams(subName, subType, ref stackProtectionCounter); // Recursive to determine nested types
                         else
                             genericParams += $"{subName}, ";
                         break;
