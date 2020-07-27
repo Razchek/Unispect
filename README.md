@@ -11,7 +11,7 @@ of being able to access the run-time type definitions as well as accurate field 
 
 ![Screenshot1](https://github.com/Razchek/Unispect/blob/master/Gallery/screenshot1.png?raw=true)
 
-### Download
+# Download
 Head over to the [releases](https://github.com/Razchek/Unispect/releases) page.
 
 # Features
@@ -32,6 +32,27 @@ Head over to the [releases](https://github.com/Razchek/Unispect/releases) page.
  
  *³ _The standard notepad only accepts files, I did not want to create a temporary file (or otherwise) to accomodate for that._
 
+### Drag & Drop
+From the Type Inspector view (see below) simply click and drag a Type Definition or Field Definition into your desired application's text input box.
+That action will produce either:
+
+```css
+Type Definition output:
+[Class] BehaviourMachine.ObjectRandom : ActionNode
+    [00][S] onNodeTick : System.Action<ActionNode>
+    [10] m_Status : System.Int32
+    [18] m_Branch : BehaviourMachine.BranchNode
+    [20] m_Self : UnityEngine.GameObject
+    [28] m_Owner : BehaviourMachine.INodeOwner
+    [30] instanceID : Int32
+    [38] name : String
+    [40] objects : BehaviourMachine.ObjectVar[]
+    [48] storeObject : BehaviourMachine.ObjectVar
+
+Field Definition output:
+BehaviourMachine.ObjectRandom->m_Branch // Offset: 0x0018 (Type: BehaviourMachine.BranchNode)
+```
+
 ![Screenshot2](https://github.com/Razchek/Unispect/blob/master/Gallery/screenshot2.png?raw=true)
 
 Planned features (these aren't definite, but likely):
@@ -40,7 +61,7 @@ Planned features (these aren't definite, but likely):
   - Export a .NET Framework dynamic link library using the project information
   - Changes to the application interface, more UI elements to make swift browsing more accessible
  
-### Current Limitations & Thoughts
+# Current Limitations & Thoughts
   - Currently only tested on Unity 2018 and Unity 2019 builds. When I push the Assembly Export feature, I will also convert the static structures used to read all of the remote information into dynamic structures and allow the offsets to be customized with a JSON file. This will allow Unispect to target a broader spectrum of Unity versions.
   - Currently only games using mono bleeding edge (mono-2.0-bdwgc) are supported. Standard mono is in the scope of this project and will be looked at in the near future.
   - Only works with Unity Scripting Backend: Mono. IL2CPP may be supported in the future.
@@ -54,7 +75,7 @@ Planned features (these aren't definite, but likely):
 
 Check out the [issues tab](https://github.com/Razchek/Unispect/issues) for more.
  
-### Tech
+# Tech
 
 Unispect uses these projects (or plans to):
 
@@ -62,12 +83,12 @@ Unispect uses these projects (or plans to):
 * [Fody.Costura] - Merges IL assemblies together, makes things more portable!
 * [DynamicStructs] (Currently Private) - A dynamic struct generator written by me. :)
   
-### Installation
+# Installation
 
 Unispect requires the [.NET Framework v4.8](https://dotnet.microsoft.com/download/dotnet-framework/net48) or higher to be installed in order to run.
 I currently have no plans on porting it to other frameworks or platforms.
 
- ### Example file output (small snippet):
+# Example file output (small snippet):
 ```css
 [Class] GPUInstancer.SpaceshipMobileController : MonoBehaviour
     [00][S] OffsetOfInstanceIDInCPlusPlusObject : Int32     // Static fields are marked with [S]
@@ -98,7 +119,7 @@ I currently have no plans on porting it to other frameworks or platforms.
     [34] vector2_0x34 : UnityEngine.Vector2
 ```
 
-### Plugins
+# Plugins
 
   - Start a new Class Library (.NET Framework) project and replace your starting code with the code from [MemoryPluginTemplate.cs]
   - Add a reference to Unispect.exe (Project > Add Reference... > Browse)
@@ -110,17 +131,17 @@ I currently have no plans on porting it to other frameworks or platforms.
 ![Screenshot1](https://github.com/Razchek/Unispect/blob/master/Gallery/screenshot3.png?raw=true)
 
 
-### Build
+# Build
    - **Visual Studio 2019:** *Build > Build Solution (F6)*
    - **Visual Studio 2017:** Remove the 'Fody.Costura' NuGet package then *Build > Build Solution (F6)*
 
-### Support
+# Support
 Contribute? Nice! Fork and request a pull.
 
 Before requesting a pull, be sure to test the target changes.
 If the testing fails, feel free to create an [issue](https://github.com/Razchek/Unispect/issues) instead.
 
-License
+# License
 ----
 All code, NuGets and binaries are under the [MIT License (MIT)]
 
