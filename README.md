@@ -24,10 +24,13 @@ Head over to the [releases](https://github.com/Razchek/Unispect/releases) page.
   - Plugin interface for custom memory access implementations
   - Track types in more detail in the inspector by simply clicking on the base or extended type
   - Fast definition collection. Only a few seconds even when using the native memory implementation.
+  - Drag & drop definitions from the Type Definition Inspector into apps like Notepad++, Chrome, etc *³
   
  *¹ _Static values are still being implemented_
  
  *² _The deobfuscated names should match between users. I need collaborative results to validate this._
+ 
+ *³ _The standard notepad only accepts files, I did not want to create a temporary file (or otherwise) to accomodate for that._
 
 ![Screenshot2](https://github.com/Razchek/Unispect/blob/master/Gallery/screenshot2.png?raw=true)
 

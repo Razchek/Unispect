@@ -101,7 +101,9 @@
         <mah:FlyoutsControl>
             <mah:Flyout x:Name="TypeInspectorFlyout" Header="Type Inspector" Position="Right" Width="600" IsOpen="{Binding Path=IsFlyoutOpen, Mode=TwoWay}">
                 <!-- Right flyout (treeview) -->
-                <TreeView x:Name="TvMainView"
+                <TreeView x:Name="TvMainView" 
+                          PreviewMouseMove="TvMainView_OnPreviewMouseMove"
+                          PreviewMouseLeftButtonDown="TvMainView_OnPreviewMouseLeftButtonDown"
                           VirtualizingStackPanel.IsVirtualizing="True"
                           VirtualizingStackPanel.VirtualizationMode="Standard">
                     <TreeView.ItemContainerStyle>

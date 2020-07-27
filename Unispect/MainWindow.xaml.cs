@@ -5,12 +5,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using MenuItem = System.Windows.Controls.MenuItem;
 
 
@@ -290,7 +294,7 @@ namespace Unispect
             var moduleToDump = TxInspectorTarget.Text;
 
             TypeDefinitionsDb = null;
-            bool exceptionOccurred = false;
+            var exceptionOccurred = false;
             await Task.Run(() =>
             {
                 try
@@ -708,13 +712,13 @@ namespace Unispect
             dynamic source = e.Source;
             var context = (FieldDefWrapper)source.DataContext;
 
-            ContextMenu cm = new ContextMenu();
+            var cm = new ContextMenu();
             cm.Items.Add(new MenuItem() { Header = "Test" });
             cm.IsOpen = true;
 
             // todo refactor and then move to the proper location (menuItem.Click event in a task)
             var suffix = $"[0x{context.Offset:X4}] {context.Name}";
-            List<string> chains = new List<string>();
+            var chains = new List<string>();
 
             // Todo maybe make this recursive with a depth setting
             foreach (var r in GetReferences(context.Parent))
@@ -744,6 +748,125 @@ namespace Unispect
             }
 
             return retList;
+        }
+
+        private Point _dragStartPoint;
+        private bool _isDragging = false;
+        private void TvMainView_OnPreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed ||
+                e.RightButton == MouseButtonState.Pressed && !_isDragging)
+            {
+                if (IsMouseOverScrollbar(sender, e.GetPosition(sender as IInputElement)))
+                    return;
+
+                var position = e.GetPosition(null);
+                if (Math.Abs(position.X - _dragStartPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                    Math.Abs(position.Y - _dragStartPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
+                {
+                    StartDrag(e);
+                }
+            }
+        }
+
+        private void TvMainView_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _dragStartPoint = e.GetPosition(null);
+        }
+
+        private static bool IsMouseOverScrollbar(object sender, Point mousePosition)
+        {
+            if (!(sender is Visual visual))
+                return false;
+
+            var hit = VisualTreeHelper.HitTest(visual, mousePosition);
+            if (hit == null)
+                return false;
+
+            var dObj = hit.VisualHit;
+            while (dObj != null)
+            {
+                switch (dObj)
+                {
+                    case ScrollBar _:
+                        return true;
+                    case Visual _:
+                    case Visual3D _:
+                        dObj = VisualTreeHelper.GetParent(dObj);
+                        break;
+                    default:
+                        dObj = LogicalTreeHelper.GetParent(dObj);
+                        break;
+                }
+            }
+
+            return false;
+        }
+        private void StartDrag(MouseEventArgs e)
+        {
+            _isDragging = true;
+
+            var item = this.TvMainView.SelectedItem;
+            if (item != null)
+            {
+                //https://docs.microsoft.com/en-us/dotnet/api/system.windows.dataformats?view=netcore-3.1
+                var data = new DataObject();
+                data.SetData(DataFormats.Serializable, item);
+                switch (item)
+                {
+                    case TypeDefWrapper typeDef:
+                        var sb = new StringBuilder();
+                        sb.Append($"[{typeDef.ClassType}] ");
+                        sb.Append(typeDef.FullName);
+
+                        var parent = typeDef.Parent;
+                        if (parent != null)
+                        {
+                            sb.Append($" : {parent.Name}");
+                            var interfaceList = typeDef.Interfaces;
+                            if (interfaceList.Count > 0)
+                            {
+                                foreach (var iface in interfaceList)
+                                {
+                                    sb.Append($", {iface.Name}");
+                                }
+                            }
+                        }
+
+                        sb.AppendLine();
+
+                        foreach (var field in typeDef.Fields)
+                        {
+                            var fieldName = field.Name;
+                            var fieldType = field.FieldType;
+                            sb.AppendLine(field.IsValueType
+                                ? $"    [{field.Offset:X2}][{field.ValueTypeShort}] {fieldName} : {fieldType}"
+                                : $"    [{field.Offset:X2}] {fieldName} : {fieldType}");
+                        }
+
+                        data.SetData(DataFormats.Text, sb.ToString());
+                        break;
+
+                    case FieldDefWrapper fieldDef:
+                        data.SetData(DataFormats.Text,
+                            $"{fieldDef.Parent.FullName}->{fieldDef.Name} // Offset: 0x{fieldDef.Offset:X4} (Type: {fieldDef.FieldType})" +
+                            $"{Environment.NewLine}");
+                        break;
+
+                    default:
+                        data.SetData(DataFormats.Text, item.ToString());
+                        break;
+                }
+
+                var dragDropEffects = DragDropEffects.Move | DragDropEffects.Copy;
+
+                if (e.RightButton == MouseButtonState.Pressed)
+                    dragDropEffects = DragDropEffects.All;
+
+                DragDrop.DoDragDrop(TvMainView, data, dragDropEffects);
+            }
+
+            _isDragging = false;
         }
     }
 }
