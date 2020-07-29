@@ -752,14 +752,14 @@ namespace Unispect
 
         private Point _dragStartPoint;
         private bool _isDragging = false;
+        private bool _canDrag = false;
         private void TvMainView_OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed ||
-                e.RightButton == MouseButtonState.Pressed && !_isDragging)
-            {
-                if (IsMouseOverScrollbar(sender, e.GetPosition(sender as IInputElement)))
-                    return;
+            if (!_canDrag)
+                return;
 
+            if (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed && !_isDragging)
+            {
                 var position = e.GetPosition(null);
                 if (Math.Abs(position.X - _dragStartPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
                     Math.Abs(position.Y - _dragStartPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
@@ -771,7 +771,15 @@ namespace Unispect
 
         private void TvMainView_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            _dragStartPoint = e.GetPosition(null);
+            if (IsMouseOverScrollbar(sender, e.GetPosition(sender as IInputElement)))
+            {
+                _canDrag = false;
+            }
+            else
+            {
+                _canDrag = true;
+                _dragStartPoint = e.GetPosition(null);
+            }
         }
 
         private static bool IsMouseOverScrollbar(object sender, Point mousePosition)
