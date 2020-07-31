@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Unispect
 {
@@ -63,7 +64,7 @@ namespace Unispect
             //        Fields.Add(fdw);
             //    }
             //}
-            if(fields != null)
+            if (fields != null)
                 Fields.AddRange(fields.Select(field => (FieldDefWrapper)field)
                     .Where(w => w.Name != "<ErrorReadingField>"));
             // bug Skipping invalid fields until I solve the issue
@@ -81,21 +82,21 @@ namespace Unispect
             foreach (var f in Fields)
             {
                 f.Parent = this;
-                
+
                 // If the type is ValueType and the field is not static, then we need to shift the offset back by 0x10.
                 // I'm not sure why, but in all my tests this has been validated.
                 if (InnerDefinition.IsValueType)
                 {
-                    if (!f.IsValueType)
+                    if (!f.HasValue)
                     {
                         f.Offset -= 0x10;
                     }
                 }
 
-                if (f.IsValueType)
-                {
-                    //if (f.ValueTypeShort == "S") f.GetValue();
-                }
+                //if (f.HasValue)
+                //{
+                //    //if (f.ValueTypeShort == "S") f.GetValue();
+                //}
             }
         }
 
@@ -119,5 +120,86 @@ namespace Unispect
             return new TypeDefWrapper(typeDef);
         }
 
+        #region Formatters
+        public string ToTreeString(bool skipValueTypes = true)
+        {
+            var sb = new StringBuilder();
+            sb.Append($"[{ClassType}] ");
+            sb.Append(FullName);
+
+            var parent = Parent;
+            if (parent != null)
+            {
+                sb.Append($" : {parent.Name}");
+                var interfaceList = Interfaces;
+                if (interfaceList.Count > 0)
+                {
+                    foreach (var iface in interfaceList)
+                    {
+                        sb.Append($", {iface.Name}");
+                    }
+                }
+            }
+
+            sb.AppendLine();
+
+            foreach (var field in Fields)
+            {
+                if (skipValueTypes && field.HasValue)
+                    continue;
+
+                var fieldName = field.Name;
+                var fieldType = field.FieldType;
+                sb.AppendLine(field.HasValue
+                    ? $"    [{field.Offset:X2}][{field.ConstantValueTypeShort}] {fieldName} : {fieldType}"
+                    : $"    [{field.Offset:X2}] {fieldName} : {fieldType}");
+            }
+
+            return sb.ToString();
+        }
+
+        public string ToCSharpString(string ptrName = "ulong", bool skipValueTypes = true)
+        {
+            var sb = new StringBuilder();
+
+            sb.Append($"public struct {Name}");
+
+            var parent = Parent;
+            if (parent != null)
+            {
+                sb.Append($" // {FullName} : {parent.Name}");
+                var interfaceList = Interfaces;
+                if (interfaceList.Count > 0)
+                {
+                    foreach (var iface in interfaceList)
+                    {
+                        sb.Append($", {iface.Name}");
+                    }
+                }
+            }
+
+            sb.AppendLine();
+            sb.AppendLine("{");
+
+            foreach (var field in Fields)
+            {
+                if (skipValueTypes && field.HasValue)
+                    continue;
+
+                var fieldName = field.Name;
+                var fieldType = field.FieldType;
+
+                var isPointer = field.IsPointer || fieldType == "String";
+
+                sb.AppendLine(isPointer
+                    ? $"    [FieldOffset(0x{field.Offset:X2})] public {ptrName} {fieldName}; // {fieldType.GetSimpleTypeKeyword()}"
+                    : $"    [FieldOffset(0x{field.Offset:X2})] public {fieldType.GetSimpleTypeKeyword()} {fieldName};");
+            }
+
+            sb.AppendLine("}");
+
+            return sb.ToString();
+        }
+        #endregion
     }
 }

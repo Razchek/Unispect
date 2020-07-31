@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using MahApps.Metro.Converters;
 
 namespace Unispect
 {
@@ -61,11 +62,11 @@ namespace Unispect
             return Name;
         }
 
-        public bool IsValueType(out string valueType)
+        public bool HasValue(out string valueType)
         {
             var monoType = Memory.Read<MonoType>(Type);
 
-            if (monoType.IsValueType)
+            if (monoType.HasValue)
             {
                 if (monoType.IsConstant) valueType = "Constant";
                 else if (monoType.IsStatic) valueType = "Static";
@@ -78,11 +79,21 @@ namespace Unispect
             return false;
         }
 
+        public TypeEnum TypeCode
+        {
+            get
+            {
+                var monoType = Memory.Read<MonoType>(Type);
+                var typeCode = monoType.TypeCode;
+                return typeCode;
+            }
+        } 
+
         public string GetFieldTypeString()
         {
             var monoType = Memory.Read<MonoType>(Type);
 
-            var typeCode = (TypeEnum)(0xFF & (monoType.Attributes >> 16));
+            var typeCode = monoType.TypeCode;
             switch (typeCode)
             {
                 case TypeEnum.Class:
@@ -136,7 +147,7 @@ namespace Unispect
             for (uint i = 0; i < paramCount && i < MonoGenericInstance.MaxParams; i++)
             {
                 var subType = MemoryProxy.Instance.Read<MonoType>(monoGenericInst.MonoTypes[i]);
-                var subTypeCode = subType.GetTypeCode();
+                var subTypeCode = subType.TypeCode;
 
                 switch (subTypeCode)
                 {
@@ -168,7 +179,7 @@ namespace Unispect
         {
             var monoType = Memory.Read<MonoType>(Type);
 
-            var typeCode = (TypeEnum)(0xFF & (monoType.Attributes >> 16));
+            var typeCode = monoType.TypeCode;
             switch (typeCode)
             {
                 case TypeEnum.Class:

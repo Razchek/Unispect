@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -64,6 +65,9 @@ namespace Unispect
             // Assign our default memory accessor (it may be overridden in the next line)
             _memoryProxyType = typeof(BasicMemory);
 
+            CbDropType.DataContext = this;
+            CbDropType.ItemsSource = DropTypes;
+
             LoadSettings();
         }
 
@@ -124,6 +128,11 @@ namespace Unispect
 
                 if (_settings.TryGetValue("OutputPath", out var outputPath))
                     TxOutputFile.Text = outputPath;
+
+                CbDropType.SelectedIndex = _settings.TryGetValue("DropTypeIndex", out var dropTypeIndex)
+                    ? int.Parse(dropTypeIndex)
+                    : 0;
+
             }
             catch (Exception ex)
             {
@@ -145,6 +154,7 @@ namespace Unispect
                 _settings.AddOrUpdate("ProcessHandle", TxProcessHandle.Text);
                 _settings.AddOrUpdate("TargetModule", TxInspectorTarget.Text);
                 _settings.AddOrUpdate("OutputPath", TxOutputFile.Text);
+                _settings.AddOrUpdate("DropTypeIndex", CbDropType.SelectedIndex.ToString());
 
                 Serializer.Save(SettingsPath, _settings);
 
@@ -810,6 +820,14 @@ namespace Unispect
 
             return false;
         }
+
+        private ObservableCollection<string> DropTypes { get; } = new ObservableCollection<string>
+        {
+            "Text tree",
+            "C# struct (IntPtr)",
+            "C# struct (ulong)"
+        };
+
         private void StartDrag(MouseEventArgs e)
         {
             _isDragging = true;
@@ -819,40 +837,26 @@ namespace Unispect
             {
                 //https://docs.microsoft.com/en-us/dotnet/api/system.windows.dataformats?view=netcore-3.1
                 var data = new DataObject();
-                data.SetData(DataFormats.Serializable, item);
+                //data.SetData(DataFormats.Serializable, item);
                 switch (item)
                 {
                     case TypeDefWrapper typeDef:
-                        var sb = new StringBuilder();
-                        sb.Append($"[{typeDef.ClassType}] ");
-                        sb.Append(typeDef.FullName);
-
-                        var parent = typeDef.Parent;
-                        if (parent != null)
+                        var outputType = CbDropType.SelectedIndex;
+                        var dataStr = "";
+                        switch (outputType)
                         {
-                            sb.Append($" : {parent.Name}");
-                            var interfaceList = typeDef.Interfaces;
-                            if (interfaceList.Count > 0)
-                            {
-                                foreach (var iface in interfaceList)
-                                {
-                                    sb.Append($", {iface.Name}");
-                                }
-                            }
+                            case 0:
+                                dataStr = typeDef.ToTreeString();
+                                break;
+                            case 1:
+                                dataStr = typeDef.ToCSharpString("IntPtr");
+                                break;
+                            case 2:
+                                dataStr = typeDef.ToCSharpString();
+                                break;
                         }
 
-                        sb.AppendLine();
-
-                        foreach (var field in typeDef.Fields)
-                        {
-                            var fieldName = field.Name;
-                            var fieldType = field.FieldType;
-                            sb.AppendLine(field.IsValueType
-                                ? $"    [{field.Offset:X2}][{field.ValueTypeShort}] {fieldName} : {fieldType}"
-                                : $"    [{field.Offset:X2}] {fieldName} : {fieldType}");
-                        }
-
-                        data.SetData(DataFormats.Text, sb.ToString());
+                        data.SetData(DataFormats.Text, dataStr);
                         break;
 
                     case FieldDefWrapper fieldDef:

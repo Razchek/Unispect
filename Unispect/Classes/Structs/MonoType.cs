@@ -13,12 +13,9 @@ namespace Unispect
 
         public bool IsConstant => (Attributes & 0x40) == 0x40;
 
-        public bool IsValueType => IsConstant || IsStatic;
+        public bool HasValue => IsConstant || IsStatic;
 
-        public TypeEnum GetTypeCode()
-        {
-            return (TypeEnum)(0xFF & (Attributes >> 16));
-        }
+        public TypeEnum TypeCode => (TypeEnum)(0xFF & (Attributes >> 16));
     }
 }
 

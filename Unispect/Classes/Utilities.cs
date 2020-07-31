@@ -51,6 +51,36 @@ namespace Unispect
             return str;
         }
 
+        public static string GetSimpleTypeKeyword(this string text)
+        {
+            var ret = text.Replace("System.", "");
+            switch (ret)
+            {
+                case "Void": return "void";
+                case "Object": return "object";
+                case "String": return "string";
+
+                case "Boolean": return "bool";
+
+                case "Single": return "float";
+                case "Double": return "double";
+
+                case "Byte": return "byte";
+
+                case "SByte": return "sbyte";
+
+                case "Int16": return "short";
+                case "Int32": return "int";
+                case "Int64": return "long";
+
+                case "UInt16": return "ushort";
+                case "UInt32": return "uint";
+                case "UInt64": return "ulong";
+            }
+
+            return ret;
+        }
+
         public static IEnumerable<int> Step(int fromInclusive, int toExclusive, int step)
         {
             for (var i = fromInclusive; i < toExclusive; i += step)

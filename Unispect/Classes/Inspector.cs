@@ -222,8 +222,8 @@ namespace Unispect
 
                     var fieldName = field.Name;
                     var fieldType = field.FieldType;
-                    sb.AppendLine(field.IsValueType
-                        ? $"    [{field.Offset:X2}][{field.ValueTypeShort}] {fieldName} : {fieldType}"
+                    sb.AppendLine(field.HasValue
+                        ? $"    [{field.Offset:X2}][{field.ConstantValueTypeShort}] {fieldName} : {fieldType}"
                         : $"    [{field.Offset:X2}] {fieldName} : {fieldType}");
                 }
             }

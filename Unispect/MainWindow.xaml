@@ -139,7 +139,7 @@
                         <HierarchicalDataTemplate DataType="{x:Type unispect:FieldDefWrapper}">
                             <StackPanel Orientation="Horizontal" MouseRightButtonUp="UIElement_OnMouseRightButtonUp">
                                 <TextBlock Text="{Binding Path=OffsetHex}" />
-                                <TextBlock Text="{Binding Path=ValueType}" />
+                                <TextBlock Text="{Binding Path=ConstantValueType}" />
                                 <TextBlock Text=" " />
                                 <TextBlock Text="{Binding Path=Name}" />
                                 <TextBlock Text=" : " />
@@ -177,6 +177,8 @@
                     <CheckBox Content="Include Parent" IsChecked="{Binding Path=SsIncludeParent, Mode=TwoWay}" Checked="SearchToggleChanged" Unchecked="SearchToggleChanged" />
                     <CheckBox Content="Include Extends" IsChecked="{Binding Path=SsIncludeExtends, Mode=TwoWay}" Checked="SearchToggleChanged" Unchecked="SearchToggleChanged" />
                     <CheckBox x:Name="CbHideValueFields" Margin="0,10,0,0" Content="Hide Value Fields" />
+                    <TextBlock Text="Drag and Drop output" Margin="0,20,0,0" />
+                    <ComboBox x:Name="CbDropType" Margin="5" />
                 </StackPanel>
             </mah:Flyout>
             <mah:Flyout Header="Type Details" x:Name="TypePropertiesFlyout"  IsOpen="False" 
@@ -193,7 +195,7 @@
                             <DataTemplate DataType="{x:Type unispect:FieldDefWrapper}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Path=OffsetHex}" />
-                                    <TextBlock Text="{Binding Path=ValueType}" />
+                                    <TextBlock Text="{Binding Path=ConstantValueType}" />
                                     <TextBlock Text=" " />
                                     <TextBlock Text="{Binding Path=Name}" />
                                     <TextBlock Text=" : " />

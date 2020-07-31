@@ -26,8 +26,23 @@ namespace Unispect
 
             Offset = InnerDefinition.Offset;
 
-            IsValueType = InnerDefinition.IsValueType(out var valType);
-            ValueType = IsValueType ? $" [{valType}]": "";
+            var typeCode = InnerDefinition.TypeCode;
+            
+            var isPointer = false;
+            switch (typeCode)
+            {
+                case TypeEnum.Class:
+                case TypeEnum.SzArray:
+                case TypeEnum.GenericInst:
+                    isPointer = true;
+                    break;
+            }
+
+            IsPointer = isPointer;
+            IsValueType = typeCode == TypeEnum.ValueType;
+
+            HasValue = InnerDefinition.HasValue(out var valType);
+            ConstantValueType = HasValue ? $" [{valType}]": "";
 
         }
 
@@ -35,9 +50,12 @@ namespace Unispect
 
         public string FieldType { get; }
         
+        public bool HasValue { get; }
+        public string ConstantValueType { get; }
+        public string ConstantValueTypeShort => HasValue ? $"{ConstantValueType[2]}" : "";
+
         public bool IsValueType { get; }
-        public string ValueType { get; }
-        public string ValueTypeShort => IsValueType ? $"{ValueType[2]}" : "";
+        public bool IsPointer { get; }
 
         public TypeDefWrapper FieldTypeDefinition { get; }
 
@@ -54,7 +72,7 @@ namespace Unispect
 
         public override string ToString()
         {
-            return $"[{Offset:X2}]{ValueTypeShort} {Name} : {FieldType}";
+            return $"[{Offset:X2}]{ConstantValueTypeShort} {Name} : {FieldType}";
         }
 
         public int GetValue()
