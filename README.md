@@ -1,3 +1,6 @@
+Development on hold until I decide to pick it up again. :)
+Should work as is, leave an issue if not. Glhf!
+
 # Unispect
 ![unispect](https://github.com/Razchek/Unispect/blob/master/Gallery/UnispectLogo.png?raw=true)
  
