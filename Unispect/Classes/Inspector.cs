@@ -45,61 +45,62 @@ namespace Unispect
             string moduleToDump = "Assembly-CSharp")
         {
             Log.Add($"Initializing memory proxy of type '{memoryProxyType.Name}'");
-            _memory = (MemoryProxy)Activator.CreateInstance(memoryProxyType);
-
-            ProgressTotal += 0.16f;
-
-            Log.Add($"Attaching to process '{processHandle}'");
-            var success = _memory.AttachToProcess(processHandle);
-
-            if (!success)
-                throw new Exception("Could not attach to the remote process.");
-
-            ProgressTotal += 0.16f;
-
-            //Log.Add($"Obtaining {monoModuleName} module details");
-            var monoModule = GetMonoModule(out var monoModuleName);
-            if (monoModule == null)
+            using (_memory = (MemoryProxy)Activator.CreateInstance(memoryProxyType))
             {
-                throw new NotSupportedException();
+                ProgressTotal += 0.16f;
+
+                Log.Add($"Attaching to process '{processHandle}'");
+                var success = _memory.AttachToProcess(processHandle);
+
+                if (!success)
+                    throw new Exception("Could not attach to the remote process.");
+
+                ProgressTotal += 0.16f;
+
+                //Log.Add($"Obtaining {monoModuleName} module details");
+                var monoModule = GetMonoModule(out var monoModuleName);
+                if (monoModule == null)
+                {
+                    throw new NotSupportedException();
+                }
+
+                Log.Add($"Module {monoModule.Name} loaded. " +
+                        $"(BaseAddress: 0x{monoModule.BaseAddress:X16})");
+
+                ProgressTotal += 0.16f;
+
+                Log.Add($"Copying {monoModuleName} module to local memory {(monoModule.Size / (float)0x100000):###,###.00}MB");
+                var monoDump = _memory.Read(monoModule.BaseAddress, monoModule.Size);
+
+                ProgressTotal += 0.16f;
+
+                Log.Add($"Traversing PE of {monoModuleName}");
+                var rdfa = GetRootDomainFunctionAddress(monoDump, monoModule);
+
+                ProgressTotal += 0.16f;
+
+                Log.Add($"Getting MonoImage address for {moduleToDump}");
+                var monoImage = GetAssemblyImageAddress(rdfa, moduleToDump); // _MonoImage of moduleToDump (Assembly-CSharp)
+
+                ProgressTotal += 0.16f;
+
+                _typeDefinitions = GetRemoteTypeDefinitions(monoImage);
+
+                Log.Add("Propogating types and fields");
+                PropogateTypes();
+
+                // If this is true, then the user does not want to save to file
+                if (!string.IsNullOrWhiteSpace(fileName))
+                {
+                    DumpToFile(fileName, verbose, false);
+                    ProgressTotal += 0.15f;
+                    SaveTypeDefDb(processHandle, moduleToDump);
+                }
+
+                OnReport(TotalProgressLength); // Set to 100%
+
+                Log.Add("Operation completed successfully.");
             }
-
-            Log.Add($"Module {monoModule.Name} loaded. " +
-                    $"(BaseAddress: 0x{monoModule.BaseAddress:X16})");
-
-            ProgressTotal += 0.16f;
-
-            Log.Add($"Copying {monoModuleName} module to local memory {(monoModule.Size / (float)0x100000):###,###.00}MB");
-            var monoDump = _memory.Read(monoModule.BaseAddress, monoModule.Size);
-
-            ProgressTotal += 0.16f;
-
-            Log.Add($"Traversing PE of {monoModuleName}");
-            var rdfa = GetRootDomainFunctionAddress(monoDump, monoModule);
-
-            ProgressTotal += 0.16f;
-
-            Log.Add($"Getting MonoImage address for {moduleToDump}");
-            var monoImage = GetAssemblyImageAddress(rdfa, moduleToDump); // _MonoImage of moduleToDump (Assembly-CSharp)
-
-            ProgressTotal += 0.16f;
-
-            _typeDefinitions = GetRemoteTypeDefinitions(monoImage);
-
-            Log.Add("Propogating types and fields");
-            PropogateTypes();
-
-            // If this is true, then the user does not want to save to file
-            if (!string.IsNullOrWhiteSpace(fileName))
-            {
-                DumpToFile(fileName, verbose, false);
-                ProgressTotal += 0.15f;
-                SaveTypeDefDb(processHandle, moduleToDump);
-            }
-
-            OnReport(TotalProgressLength); // Set to 100%
-
-            Log.Add("Operation completed successfully.");
         }
 
         public void SaveTypeDefDb(string processHandle, string moduleToDump)
