@@ -236,7 +236,7 @@ namespace Unispect
 
         private ConcurrentDictionary<ulong, TypeDefinition> GetRemoteTypeDefinitions(ulong monoImageAddress)
         {
-            var classCache = _memory.Read<InternalHashTable>(monoImageAddress + Offsets.ImageClassCache);
+            var classCache = _memory.Read<InternalHashTable>(monoImageAddress + (uint)Offsets.ImageClassCache);
             var typeDefs = new Dictionary<ulong, TypeDefinition>();
 
             Log.Add($"Processing {classCache.Size} classes. This may take some time.");
@@ -253,7 +253,7 @@ namespace Unispect
 
                 for (var d = _memory.Read<ulong>(classCache.Table + i * 8);
                     d != 0;
-                    d = _memory.Read<ulong>(d + Offsets.ClassNextClassCache))
+                    d = _memory.Read<ulong>(d + (uint)Offsets.ClassNextClassCache))
                 {
                     var typeDef = _memory.Read<TypeDefinition>(d);
                     typeDefs.Add(d, typeDef);
@@ -270,7 +270,7 @@ namespace Unispect
 
             var domain = _memory.Read<ulong>(domainAddress);
 
-            var assemblyArrayAddress = _memory.Read<ulong>(domain + Offsets.DomainDomainAssemblies);
+            var assemblyArrayAddress = _memory.Read<ulong>(domain + (uint)Offsets.DomainDomainAssemblies);
             for (var assemblyAddress = assemblyArrayAddress;
                 assemblyAddress != 0;
                 assemblyAddress = _memory.Read<ulong>(assemblyAddress + 0x8))
@@ -281,7 +281,7 @@ namespace Unispect
                 if (assemblyName != name)
                     continue;
 
-                return _memory.Read<ulong>(assembly + Offsets.AssemblyImage);
+                return _memory.Read<ulong>(assembly + (uint)Offsets.AssemblyImage);
             }
 
             throw new InvalidOperationException($"Unable to find assembly '{name}'");

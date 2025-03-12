@@ -1,0 +1,12 @@
+﻿{
+    "TargetTitle": "v2022",
+    "ImageDosHeaderELfanew": "0x3c",
+    "ImageNtHeadersExportDirectoryAddress": "0x88",
+    "ImageExportDirectoryNumberOfFunctions": "0x14",
+    "ImageExportDirectoryAddressOfFunctions": "0x1c",
+    "ImageExportDirectoryAddressOfNames": "0x20",
+    "ImageClassCache": "0x4D0",
+    "DomainDomainAssemblies": "0xA0",
+    "AssemblyImage": "0x60",
+    "ClassNextClassCache": "0x108"
+}

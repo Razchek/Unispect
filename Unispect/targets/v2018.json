@@ -1,0 +1,12 @@
+﻿{
+    "TargetTitle": "v2018-v2021",
+    "ImageDosHeaderELfanew": "0x3c",
+    "ImageNtHeadersExportDirectoryAddress": "0x88",
+    "ImageExportDirectoryNumberOfFunctions": "0x14",
+    "ImageExportDirectoryAddressOfFunctions": "0x1c",
+    "ImageExportDirectoryAddressOfNames": "0x20",
+    "ImageClassCache": "0x4C0",
+    "DomainDomainAssemblies": "0xC8",
+    "AssemblyImage": "0x60",
+    "ClassNextClassCache": "0x108"
+}

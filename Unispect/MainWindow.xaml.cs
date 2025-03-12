@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -618,6 +619,55 @@ namespace Unispect
             _typingSearchTimer.Stop();
         }
         #endregion
+
+        private async void BtnSelectOffsetsClick(object sender, RoutedEventArgs e)
+        {
+            var cm = new ContextMenu { IsOpen = true };
+            cm.Items.Add(new MenuItem { Header = "Loading ...", IsEnabled = false });
+
+            // <TargetTitle, FilePath>
+            var validTargets = new Dictionary<string, string>();
+            await Task.Run(() =>
+            {
+                var targetsFolder = Path.Combine(Directory.GetCurrentDirectory(), "targets");
+                var jsonFiles = Directory.GetFiles(targetsFolder, "*.json");
+                foreach (var jsonFile in jsonFiles)
+                {
+                    var title = Offsets.Load(jsonFile, true);
+                    if (string.IsNullOrWhiteSpace(title))
+                        continue;
+
+                    while (validTargets.ContainsKey(title))
+                        title += "~"; // just in case there are duplicate titles in the json files
+
+                    validTargets.Add(title, jsonFile);
+                }
+            });
+
+            cm.Items.RemoveAt(0);
+
+            foreach (var target in validTargets)
+            {
+                var mi = new MenuItem();
+                mi.Click += (o, args) =>
+                {
+                    Log.Add($"Loading {target.Key} from {target.Value}");
+                    var success = Offsets.Load(target.Value);
+                    if (!string.IsNullOrWhiteSpace(success))
+                    {
+                        _settings.AddOrUpdate("UnityTarget", target.Value);
+                        if (sender is Button button)
+                            button.Content = target.Key;
+                    }
+                };
+
+                mi.Header = target.Key;
+                if (target.Key.Contains("~"))
+                    mi.ToolTip = "The '~' means that one or more targets share the same title in their json file.";
+
+                cm.Items.Add(mi);
+            }
+        }
 
         private async void BtnLoadPluginClick(object sender, RoutedEventArgs e)
         {

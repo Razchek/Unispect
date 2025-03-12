@@ -65,7 +65,7 @@ Planned features (these aren't definite, but likely):
   - Changes to the application interface, more UI elements to make swift browsing more accessible
  
 # Current Limitations & Thoughts
-  - Currently only tested on Unity 2018 and Unity 2019 builds. When I push the Assembly Export feature, I will also convert the static structures used to read all of the remote information into dynamic structures and allow the offsets to be customized with a JSON file. This will allow Unispect to target a broader spectrum of Unity versions.
+  - Currently only tested on Unity 2018 and Unity 2019 builds. I have added a targets directory to allow minor offset adjustments to hopefully support a broader spectrum of versions.
   - Currently only games using mono bleeding edge (mono-2.0-bdwgc) are supported. Standard mono is in the scope of this project and will be looked at in the near future.
   - Only works with Unity Scripting Backend: Mono. IL2CPP may be supported in the future.
   - Only works with x64 systems and software. I might (unlikely) add support for x32 in the future.
@@ -133,9 +133,11 @@ I currently have no plans on porting it to other frameworks or platforms.
   
 ![Screenshot1](https://github.com/Razchek/Unispect/blob/master/Gallery/screenshot3.png?raw=true)
 
+# Targets
+In Unispect's directory you will find a folder named `targets` with `.json` files inside. If you need to make your own, simply duplicate one of these and use the existing format with your new offsets.
 
 # Build
-   - **Visual Studio 2019:** *Build > Build Solution (F6)*
+   - **Visual Studio 2019/2022:** *Build > Build Solution (F6)*
    - **Visual Studio 2017:** Remove the 'Fody.Costura' NuGet package then *Build > Build Solution (F6)*
 
 # Support
@@ -150,6 +152,7 @@ If the testing fails, feel free to create an [issue](https://github.com/Razchek/
 All code, NuGets and binaries are under the [MIT License (MIT)]
 
    [MahApps.Metro]: <https://github.com/MahApps/MahApps.Metro>
+   [Newtonsoft.Json]: <https://github.com/JamesNK/Newtonsoft.Json>
    [Fody.Costura]: <https://github.com/Fody/Costura>
    [MIT License (MIT)]: <https://github.com/Razchek/Unispect/blob/master/LICENSE>
    [MemoryPluginTemplate.cs]: <https://github.com/Razchek/Unispect/blob/master/Unispect/Plugins/MemoryPluginTemplate.cs>
