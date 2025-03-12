@@ -84,6 +84,7 @@ Unispect uses these projects (or plans to):
 
 * [MahApps.Metro] - A toolkit for creating modern WPF applications. Lots of goodness out-of-the box.
 * [Fody.Costura] - Merges IL assemblies together, makes things more portable!
+* [Newtonsoft.Json] - Popular high-performance JSON framework for .NET
 * [DynamicStructs] (Currently Private) - A dynamic struct generator written by me. :)
   
 # Installation
