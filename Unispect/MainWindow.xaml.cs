@@ -130,6 +130,19 @@ namespace Unispect
                 if (_settings.TryGetValue("OutputPath", out var outputPath))
                     TxOutputFile.Text = outputPath;
 
+                if (_settings.TryGetValue("UnityTarget", out var targetJsonPath))
+                {
+                    if (File.Exists(targetJsonPath))
+                    {
+                        Offsets.Load(targetJsonPath);
+                    }
+                    else
+                    {
+                        Log.Add($"{targetJsonPath} no longer exists. Setting removed.");
+                        _settings.Remove("UnityTarget");
+                    }
+                }
+
                 CbDropType.SelectedIndex = _settings.TryGetValue("DropTypeIndex", out var dropTypeIndex)
                     ? int.Parse(dropTypeIndex)
                     : 0;
