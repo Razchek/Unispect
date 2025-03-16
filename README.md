@@ -65,7 +65,7 @@ Planned features (these aren't definite, but likely):
   - Changes to the application interface, more UI elements to make swift browsing more accessible
  
 # Current Limitations & Thoughts
-  - Currently only tested on Unity 2018 and Unity 2019 builds. I have added a targets directory to allow minor offset adjustments to hopefully support a broader spectrum of versions.
+  - Currently only tested on Unity 2018, 2019 & 2022 builds. I have added a targets directory to allow minor offset adjustments to hopefully support a broader spectrum of versions.
   - Currently only games using mono bleeding edge (mono-2.0-bdwgc) are supported. Standard mono is in the scope of this project and will be looked at in the near future.
   - Only works with Unity Scripting Backend: Mono. IL2CPP may be supported in the future.
   - Only works with x64 systems and software. I might (unlikely) add support for x32 in the future.
