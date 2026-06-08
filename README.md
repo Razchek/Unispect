@@ -1,4 +1,4 @@
-Development on hold until I decide to pick it up again. :)
+Development on hold indefinitely, ggs!
 Should work as is, leave an issue if not. Glhf!
 
 # Unispect
