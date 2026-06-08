@@ -143,7 +143,6 @@ In Unispect's directory you will find a folder named `targets` with `.json` file
 
 # Support
 Contribute? Nice! Fork and request a pull.
-Or feel free to [buy me a coffee!](https://ko-fi.com/razchek)
 
 Before requesting a pull, be sure to test the target changes.
 If the testing fails, feel free to create an [issue](https://github.com/Razchek/Unispect/issues) instead.
